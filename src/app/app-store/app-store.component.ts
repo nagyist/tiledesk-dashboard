@@ -256,7 +256,7 @@ export class AppStoreComponent extends PricingBaseComponent implements OnInit, O
   getApps() {
     this.appStoreService.getApps().subscribe((_apps: any) => {
       this.apps = _apps.apps;
-      this.logger.log('APP-STORE - getApps APPS ', this.apps);
+      console.log('APP-STORE - getApps APPS ', this.apps);
 
 
       const paidApps = [
@@ -280,7 +280,7 @@ export class AppStoreComponent extends PricingBaseComponent implements OnInit, O
 
       this.apps.forEach(app => {
 
-
+        console.log('APP-STORE - getApps app > learnMore ', app.learnMore, ' app > title ' , app.title,  'app > runURL ',  app.runURL );
 
         if (app.description.length > 118) {
           app.description = app.description.slice(0, 118) + '...'
