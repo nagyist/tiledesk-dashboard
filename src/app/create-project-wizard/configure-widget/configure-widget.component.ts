@@ -450,8 +450,15 @@ export class ConfigureWidgetComponent extends WidgetSetUpBaseComponent implement
         // ---------------------------------------------------------------
         // @ Welcome title and company intro
         // ---------------------------------------------------------------
-        this.welcomeTitle = this.defaultTranslation["WELLCOME_TITLE"];
-        this.welcomeMsg = this.defaultTranslation["WELLCOME_MSG"];
+        this.welcomeTitle = this.defaultTranslation["WELCOME_TITLE"];
+        if (this.selected_translation.hasOwnProperty("WELLCOME_TITLE") ) {
+          this.welcomeTitle = this.selected_translation["WELLCOME_TITLE"];
+        }
+
+        this.welcomeMsg = this.defaultTranslation["WELCOME_MSG"];
+        if (this.selected_translation.hasOwnProperty("WELLCOME_MSG") ) {
+          this.welcomeMsg = this.selected_translation["WELLCOME_MSG"];
+        }
 
         this.waitingTimeNotFoundMsg = this.defaultTranslation["WAITING_TIME_NOT_FOUND"];
         this.waitingTimeFoundMsg = this.defaultTranslation["WAITING_TIME_FOUND"];

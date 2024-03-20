@@ -1610,13 +1610,13 @@ export class WidgetSetUp extends WidgetSetUpBaseComponent implements OnInit, Aft
   }
 
   getCurrentTranslation(selectedLangCode: string) {
-    this.logger.log('[WIDGET-SET-UP] init getCurrentTranslation ')
+    // console.log('[WIDGET-SET-UP] init getCurrentTranslation ')
     this.translations.forEach(translation => {
       if (translation.lang.toLowerCase() === selectedLangCode) {
 
 
         this.selected_translation = translation.data
-        this.logger.log('[WIDGET-SET-UP] ***** selected translation: ', this.selected_translation)
+        // console.log('[WIDGET-SET-UP] ***** selected translation: ', this.selected_translation)
 
         // ---------------------------------------------------------------------------------------------
         // @ New Conversation (not editable in the widhet setting page but only from multilanguage page)
@@ -1632,8 +1632,18 @@ export class WidgetSetUp extends WidgetSetUpBaseComponent implements OnInit, Aft
         // ---------------------------------------------------------------
         // @ Welcome title and company intro
         // ---------------------------------------------------------------
-        this.welcomeTitle = this.selected_translation["WELLCOME_TITLE"];
-        this.welcomeMsg = this.selected_translation["WELLCOME_MSG"];
+
+        this.welcomeTitle = this.selected_translation["WELCOME_TITLE"];
+        if (this.selected_translation.hasOwnProperty("WELLCOME_TITLE") ) {
+          this.welcomeTitle = this.selected_translation["WELLCOME_TITLE"];
+        }
+        // console.log('[WIDGET-SET-UP] selected_translation hasOwnProperty WELCOME_TITLE ', this.selected_translation.hasOwnProperty("WELCOME_TITLE"))
+        // console.log('[WIDGET-SET-UP] selected_translation hasOwnProperty WELLCOME_TITLE ', this.selected_translation.hasOwnProperty("WELLCOME_TITLE"))
+
+        this.welcomeMsg = this.selected_translation["WELCOME_MSG"];
+        if (this.selected_translation.hasOwnProperty("WELLCOME_MSG") ) {
+          this.welcomeMsg = this.selected_translation["WELLCOME_MSG"];
+        }
         this.logger.log('[WIDGET-SET-UP] ***** selected translation - WELCOME_TITLE: ', this.welcomeTitle, ' - WELLCOME_MSG: ', this.welcomeMsg);
 
 
@@ -1967,6 +1977,8 @@ export class WidgetSetUp extends WidgetSetUpBaseComponent implements OnInit, Aft
       save_online_offline_msgs.blur()
     }
 
+    this.selected_translation["WELCOME_TITLE"] = this.welcomeTitle;
+    this.selected_translation["WELCOME_MSG"] = this.welcomeMsg;
     this.selected_translation["WELLCOME_TITLE"] = this.welcomeTitle;
     this.selected_translation["WELLCOME_MSG"] = this.welcomeMsg;
     this.selected_translation["CALLOUT_TITLE_PLACEHOLDER"] = this.calloutTitle;
