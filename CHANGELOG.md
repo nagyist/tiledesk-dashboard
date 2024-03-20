@@ -4,7 +4,7 @@
 - Improves get and save methods of translation strings
 
 ### 2.6.0-rc6
-- Improves Knowledge Base
+- Fixes the bug: App cards are not of the same height
 
 ### 2.6.0-rc4
 - Improves Knowledge Base
