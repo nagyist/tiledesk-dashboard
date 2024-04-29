@@ -150,6 +150,7 @@ import { CreateProjectGsComponent } from './create-project-wizard/create-project
 import { CnpIsMobileComponent } from './create-new-project/cnp-is-mobile/cnp-is-mobile.component';
 import { CnpTemplatesComponent } from './create-new-project/cnp-templates/cnp-templates.component';
 import { OnboardingWelcomeComponent } from './create-new-project/onboarding-welcome/onboarding-welcome.component';
+import { ContactsSlideComponent } from './contacts-slide/contacts-slide.component';
 // import { AutomationsComponent } from './automations/automations.component'; // now lazy
 
 
@@ -386,7 +387,8 @@ const routes: Routes = [
   },
   // { path: 'project/:projectid/app-edit/:appid', component: AppCreateComponent, canActivate: [AuthGuard] }, // now lazy
 
-
+  // test Contacts slide
+  { path: 'project/:projectid/contacts-s', component: ContactsSlideComponent, canActivate: [AuthGuard, ProjectProfileGuard] },
 
   // Contacts
   {
@@ -396,12 +398,27 @@ const routes: Routes = [
   },
   //  { path: 'project/:projectid/contacts', component: ContactsComponent, canActivate: [AuthGuard, ProjectProfileGuard] },  // now lazy
 
+  // Contacts whith scoll position
+  {
+    path: 'project/:projectid/contacts/:scrollposition',
+    loadChildren: () => import('app/contacts/contacts.module').then(m => m.ContactsModule),
+    canActivate: [AuthGuard, ProjectProfileGuard],
+  },
+
+  // Contacts details
   {
     path: 'project/:projectid/contact/:requesterid',
     loadChildren: () => import('app/contact-details/contact-details.module').then(m => m.ContactDetailsModule),
     canActivate: [AuthGuard],
   },
   // { path: 'project/:projectid/contact/:requesterid', component: ContactDetailsComponent, canActivate: [AuthGuard] }, // now lazy
+
+  // Contacts details whith scoll position
+  {
+    path: 'project/:projectid/contact/:requesterid/:scrollposition',
+    loadChildren: () => import('app/contact-details/contact-details.module').then(m => m.ContactDetailsModule),
+    canActivate: [AuthGuard],
+  },
 
   {
     path: 'project/:projectid/contact/edit/:requesterid',
@@ -1204,7 +1221,9 @@ const routes: Routes = [
   imports: [
     CommonModule,
     BrowserModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes,  {
+      scrollPositionRestoration: 'enabled' // Or 'top' to always scroll to top
+    } )
   ],
   exports: [RouterModule],
   providers: [AuthGuard, AdminGuard, ProjectProfileGuard, PendingChangesGuard]

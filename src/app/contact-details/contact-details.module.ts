@@ -18,7 +18,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    ContactDetailsComponent,
+    // ContactDetailsComponent,
     // ContactInfoComponent
   ],
   imports: [

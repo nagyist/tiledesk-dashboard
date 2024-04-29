@@ -91,6 +91,7 @@ export class ContactDetailsComponent implements OnInit, AfterViewInit {
   isOpenEditContactFullnameDropdown: boolean = false;
   contactNewFirstName: string;
   contactNewLastName: string;
+  scrollYposition: string
   constructor(
     public location: Location,
     private route: ActivatedRoute,
@@ -133,7 +134,22 @@ export class ContactDetailsComponent implements OnInit, AfterViewInit {
     this.getChatUrl();
     this.getBrowserVersion();
     this.getOSCODE();
+    this.getRouteParams()
   }
+
+  getRouteParams() {
+
+
+    this.route.params.subscribe((params) => {
+      // this.projectId = params.projectid
+      console.log('[CONTACTS-DTLS] - GET ROUTE PARAMS ', params);
+      if (params.scrollposition) {
+        this.scrollYposition = params.scrollposition;
+        console.log('[CONTACTS-DTLS] - GET ROUTE PARAMS scrollYposition', this.scrollYposition);
+      }
+    })
+  }
+
 
 
   getOSCODE() {
@@ -144,7 +160,7 @@ export class ContactDetailsComponent implements OnInit, AfterViewInit {
     this.logger.log('[CONTACTS-DTLS] - public_Key keys', keys)
 
     keys.forEach(key => {
-   
+
       if (key.includes("LBS")) {
         let lbs = key.split(":");
         if (lbs[1] === "F") {
@@ -486,7 +502,7 @@ export class ContactDetailsComponent implements OnInit, AfterViewInit {
     }
     this.contactTempTags = this.contactTempTags.slice(0)
     this.logger.log('[CONTACTS-DTLS] - ADD TAG > contactTags: ', this.contactTags);
-    
+
     this.logger.log('[CONTACTS-DTLS] - ADD TAG > contactTempTags: ', this.contactTempTags);
 
     setTimeout(() => {
@@ -512,8 +528,8 @@ export class ContactDetailsComponent implements OnInit, AfterViewInit {
       this.contactTags.splice(index, 1);
       this.contactTempTags.push({ tag: tag })
       this.contactTempTags = this.contactTempTags.slice(0)
-     this.logger.log('[CONTACTS-DTLS] removeTag contactTempTags', this.contactTempTags)
-     this.logger.log('[CONTACTS-DTLS] removeTag contactTags', this.contactTags)
+      this.logger.log('[CONTACTS-DTLS] removeTag contactTempTags', this.contactTempTags)
+      this.logger.log('[CONTACTS-DTLS] removeTag contactTags', this.contactTags)
 
       this.updateContactTag(this.requester_id, this.contactTags)
     }
@@ -532,7 +548,7 @@ export class ContactDetailsComponent implements OnInit, AfterViewInit {
       })
   }
 
-  
+
 
 
   getTagContainerElementHeight() {
@@ -911,7 +927,12 @@ export class ContactDetailsComponent implements OnInit, AfterViewInit {
   }
 
   goBack() {
-    this.location.back();
+    if (this.scrollYposition) {
+      this.router.navigate(['project/' + this.projectId + '/contacts', this.scrollYposition]);
+
+    } else {
+      this.location.back();
+    }
   }
 
 
@@ -1025,7 +1046,7 @@ export class ContactDetailsComponent implements OnInit, AfterViewInit {
     elemDropDown.classList.remove("dropdown__menu-form--active");
     this.logger.log('[WS-REQUESTS-MSGS] saveContactFullName  contactNewFirstName', this.contactNewFirstName)
     this.logger.log('[WS-REQUESTS-MSGS] saveContactFullName  contactNewLastName', this.contactNewLastName)
-   
+
     // request?.lead?.fullname
     if (this.contactNewFirstName && !this.contactNewLastName) {
 

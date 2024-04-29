@@ -1,18 +1,25 @@
 import { AppConfigService } from './../services/app-config.service';
 // tslint:disable:max-line-length
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { ContactsService } from '../services/contacts.service';
 
 import { Contact } from '../models/contact-model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationStart, Router, Scroll } from '@angular/router';
 import { AuthService } from '../core/auth.service';
 import { NotifyService } from '../core/notify.service';
 import { APP_SUMO_PLAN_NAME, avatarPlaceholder, getColorBck, PLAN_NAME } from '../utils/util';
 import { UsersService } from '../services/users.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectPlanService } from '../services/project-plan.service';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { LoggerService } from '../services/logger/logger.service';
+import {
+  SW_IS_LOADING_DIRECTIVE_CONFIG,
+  ISWIsLoadingDirectiveConfig, IsLoadingService,
+} from "@service-work/is-loading";
+import { ViewportScroller } from '@angular/common';
+import { filter, map } from "rxjs/operators";
+
 declare const $: any;
 const swal = require('sweetalert');
 
@@ -47,9 +54,6 @@ export class ContactsComponent implements OnInit, OnDestroy, AfterViewInit {
   fullTextValue: string;
   queryString: string;
   projectId: string;
-
-  contacts: Contact[];
-
   fullName: string;
 
   // SWITCH DISPLAYED DATA IN THE MODAL DEPENDING ON WHETHER THE
@@ -118,23 +122,60 @@ export class ContactsComponent implements OnInit, OnDestroy, AfterViewInit {
   emailArray = [];
   HAS_SEARCHED: boolean = false
   fullTextIsAValidEmail: boolean = false;
+
+  contacts: Contact[];
+  scrollYposition: any;
+  scrollEl: any
+  OPEN_CONTACT_DETAILS: boolean = true;
+  isLeftVisible = true;
+  // contacts: Observable<Contact[]>;
+
   constructor(
     private contactsService: ContactsService,
     private router: Router,
+    private route: ActivatedRoute,
     private auth: AuthService,
     private notify: NotifyService,
     private usersService: UsersService,
     private translate: TranslateService,
     private prjctPlanService: ProjectPlanService,
     private appConfigService: AppConfigService,
-    private logger: LoggerService
-  ) { }
+    private logger: LoggerService,
+    private isLoadingService: IsLoadingService,
+    private viewportScroller: ViewportScroller,
+    public changeDetectorRef: ChangeDetectorRef
+  ) {
+    // this.getRouerEvents()
+    this.scrollEl = <HTMLElement>document.querySelector('.main-panel');
+    console.log('[CONTACTS-COMP] oninit scrollEl',  this.scrollEl)
+    this.getRouteParams() 
+  }
+
+
+
+
+
+
+  //   router.events.pipe(filter((event: Event): event is Scroll => event instanceof Scroll)
+  //     ).subscribe(e => {
+  //       fetch('http://example.com/movies.json').then(response => {
+  //         this.movieData = response.json();
+  //         // update the template with the data before restoring scroll
+  //         changeDetectorRef.detectChanges();
+
+  //         if (e.position) {
+  //           viewportScroller.scrollToPosition(e.position);
+  //         }
+  //       });
+  //     });
+  //   }
+  // }
 
   ngOnInit() {
     this.getTranslation();
     this.getOSCODE();
     // this.auth.checkRoleForCurrentProject();
-    this.getContacts();
+
     this.getAllContacts()
     this.getCurrentProject();
     this.getProjectUserRole();
@@ -157,6 +198,141 @@ export class ContactsComponent implements OnInit, OnDestroy, AfterViewInit {
       "hide.bs.dropdown": function () { return this.closable; }
     });
     this.getBrowserVersion();
+    this.isLoadingService.add({ key: 'contact-list' });
+
+    this.getContacts();
+    // this.contacts = this.isLoadingService.add(
+    //   // assume `UserService#getUsers()` returns `Observable<IUser[]>`
+    //   this.getContacts(),
+    //   { key: 'users-loading' }
+    // );
+
+    // this.getRouteParams()
+
+  }
+
+  getRouteParams() {
+    this.route.params.subscribe((params) => {
+      // this.projectId = params.projectid
+      console.log('[CONTACTS-COMP] - GET ROUTE PARAMS ', params);
+      if (params.scrollposition) {
+        this.scrollYposition = params.scrollposition;
+        console.log('[CONTACTS-COMP] - CONTACTS-COMP scrollYposition', +this.scrollYposition);
+       
+        console.log('[CONTACTS-COMP] goToContactDetails scrollEl scrollTop', this.scrollEl.scrollTop)
+        setTimeout(() => {
+          this.scrollEl.scrollTo(0, +this.scrollYposition);
+        }, 1000);
+      }
+    })
+
+  }
+
+  getRouerEvents() {
+
+    const scrollEl = <HTMLElement>document.querySelector('.main-panel');
+    console.log('[CONTACTS-COMP] goToContactDetails scrollEl', scrollEl)
+    console.log('[CONTACTS-COMP] goToContactDetails scrollEl scrollTop', scrollEl.scrollTop)
+    setTimeout(() => {
+      scrollEl.scrollTo(0, 507);
+    }, 1000);
+    // @HostListener("window:scroll", ["$event"]) onScroll(event) {
+    //   this.pageYoffset = window.pageYOffset;
+    // }
+
+    // this.router.events.subscribe((event) => {
+    //   if (event instanceof Scroll) {
+    //     // You can access scroll position data from event.position
+    //     // And you can scroll to that position if needed
+    //     console.log('[CONTACTS-COMP] - HERE A  Scroll event', event);
+    //     // window.scrollTo(event.position[0], event.position[1]);
+    //   }
+    // });
+
+
+    // this.router.events
+    // .pipe(
+    //   filter((event) => event instanceof NavigationEnd || (event instanceof Scroll && event.routerEvent instanceof NavigationEnd)),
+    //   map((event) => event instanceof Scroll ? event.routerEvent as NavigationEnd : event as NavigationEnd),
+    // ).subscribe((event) => { 
+    //   console.log('[CONTACTS-COMP] - HERE A  ', event);
+    // })
+
+    // console.log('[CONTACTS-COMP] - HERE 0 ');
+    // this.router.events.subscribe((event) => {
+    //   console.log('[CONTACTS-COMP] - HERE 1 ');
+    //   if (event instanceof NavigationStart  || event instanceof NavigationEnd || event instanceof Scroll) {
+
+    //     console.log('[CONTACTS-COMP] event instanceof Scroll ', event)
+
+    //   }
+    // })
+  }
+
+  getContacts() {
+    // console.log('[CONTACTS-COMP] - HERE 0  ');
+    this.getTrashedContactsCount();
+    this.getActiveContactsCount();
+
+    // this.showSpinner = true;
+
+
+
+    // this.router.events.pipe((filter) =>  instanceof Scroll)
+    //   ).subscribe(e => {
+    //     fetch('http://example.com/movies.json').then(response => {
+    //       // this.movieData = response.json();
+    //       // update the template with the data before restoring scroll
+    //       this.changeDetectorRef.detectChanges();
+
+    //       if (e.position) {
+    //         this.viewportScroller.scrollToPosition(e.position);
+    //       }
+    //     });
+    //   });
+
+    console.log('[CONTACTS-COMP] - this.pageNo ', this.pageNo);
+    this.contactsService.getLeadsActiveOrTrashed(this.queryString, this.pageNo, this.hasClickedTrashed).subscribe((leads_object: any) => {
+      console.log('[CONTACTS-COMP] - GET LEADS RESPONSE ', leads_object);
+
+      this.contacts = leads_object['leads'];
+
+      // this.changeDetectorRef.detectChanges();
+
+      console.log('[CONTACTS-COMP] - CONTACTS LIST ', this.contacts);
+
+
+      const contactsCount = leads_object['count'];
+      this.logger.log('[CONTACTS-COMP] - CONTACTS COUNT ', contactsCount);
+
+      this.displayHideFooterPagination(contactsCount);
+
+      const contactsPerPage = leads_object['perPage'];
+      this.logger.log('[CONTACTS-COMP] - N° OF CONTACTS X PAGE ', contactsCount);
+
+      const totalPagesNo = contactsCount / contactsPerPage;
+      this.logger.log('[CONTACTS-COMP] - TOTAL PAGES NUMBER', totalPagesNo);
+
+      this.totalPagesNo_roundToUp = Math.ceil(totalPagesNo);
+      this.logger.log('[CONTACTS-COMP] - TOTAL PAGES No ROUND TO UP ', this.totalPagesNo_roundToUp);
+
+      this.generateAvatarFromNameAndGetIfContactIsAuthenticated(this.contacts);
+    }, (error) => {
+      this.logger.error('[CONTACTS-COMP] - GET LEADS - ERROR  ', error);
+      this.showSpinner = false;
+    }, () => {
+      this.logger.log('[CONTACTS-COMP] - GET LEADS * COMPLETE *');
+      this.showSpinner = false;
+
+      // this.changeDetectorRef.detectChanges();
+      // if (event instanceof Scroll) {
+      //   if (event.position) {
+      //     console.log('[CONTACTS-COMP] event.position ', event.position)
+      //     this.viewportScroller.scrollToPosition(event.position);
+      //   }
+      // }
+    });
+
   }
 
   getBrowserVersion() {
@@ -422,17 +598,24 @@ export class ContactsComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.pageNo -= 1;
 
-    this.logger.log('[CONTACTS-COMP] - DECREASE PAGE NUMBER ', this.pageNo);
+    console.log('[CONTACTS-COMP] - DECREASE PAGE NUMBER ', this.pageNo);
+
     this.getContacts()
   }
 
   increasePageNumber() {
+    if (this.scrollYposition) {
+      // this.router.navigate(['project/' + this.projectId + '/contacts']);
+    }
     const increasePageNumberBtn = <HTMLElement>document.querySelector('.increase-page-number-btn');
     increasePageNumberBtn.blur()
 
     this.pageNo += 1;
-    this.logger.log('[CONTACTS-COMP]  - INCREASE PAGE NUMBER ', this.pageNo);
+    console.log('[CONTACTS-COMP]  - INCREASE PAGE NUMBER ', this.pageNo);
     this.getContacts()
+    setTimeout(() => {
+      this.scrollEl.scrollTo(0, 0);
+    }, 1000);
   }
 
   validateEmail(appSumoActivationEmail) {
@@ -675,7 +858,11 @@ export class ContactsComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
    * GET CONTACTS  */
-  getContacts() {
+
+
+
+
+  _getContacts() {
     this.getTrashedContactsCount();
     this.getActiveContactsCount();
 
@@ -684,6 +871,7 @@ export class ContactsComponent implements OnInit, OnDestroy, AfterViewInit {
       this.logger.log('[CONTACTS-COMP] - GET LEADS RESPONSE ', leads_object);
 
       this.contacts = leads_object['leads'];
+
       this.logger.log('[CONTACTS-COMP] - CONTACTS LIST ', this.contacts);
 
 
@@ -1119,7 +1307,7 @@ export class ContactsComponent implements OnInit, OnDestroy, AfterViewInit {
               this.notify._displayContactUsModal(true, 'upgrade_plan');
             } else if (this.profile_name === 'free') {  // 
               this.router.navigate(['project/' + this.projectId + '/pricing']);
-              
+
             }
 
           } else {
@@ -1210,7 +1398,14 @@ export class ContactsComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   goToContactDetails(requester_id) {
-    this.router.navigate(['project/' + this.projectId + '/contact', requester_id]);
+
+    const scrollEl = <HTMLElement>document.querySelector('.main-panel');
+    console.log('[CONTACTS-COMP] goToContactDetails scrollEl', scrollEl)
+    console.log('[CONTACTS-COMP] goToContactDetails scrollEl scrollTop', scrollEl.scrollTop)
+
+
+    this.router.navigate(['project/' + this.projectId + '/contact', requester_id, scrollEl.scrollTop]);
+    
   }
 
 
