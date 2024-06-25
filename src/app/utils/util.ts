@@ -427,6 +427,16 @@ export enum KB_MAX_NUM {
     Custom = 1000
 };
 
+export enum NAMESPACES_MAX_NUM {
+    free = 1, 
+    Growth = 1, 
+    Scale = 3,
+    Plus = 1000,
+    Basic = 1,
+    Premium = 3,
+    Custom = 1000
+};
+
 export const PLANS_LIST = {
     FREE_TRIAL: { requests: 3000,   messages: 0,    tokens: 250000,     email: 200,     chatbots: 20,       kbs: 50 }, // same as PREMIUM
     Sandbox:    { requests: 200,    messages: 0,    tokens: 100000,      email: 200,     chatbots: 2,       kbs: 50 },

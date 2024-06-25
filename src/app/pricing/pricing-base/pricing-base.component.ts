@@ -3,7 +3,7 @@ import { NotifyService } from 'app/core/notify.service';
 import { LoggerService } from 'app/services/logger/logger.service';
 import { ProjectPlanService } from 'app/services/project-plan.service';
 import { UsersService } from 'app/services/users.service';
-import { APPSUMO_PLAN_SEATS, APP_SUMO_PLAN_NAME, CHATBOT_MAX_NUM, KB_MAX_NUM, PLANS_LIST, PLAN_NAME, PLAN_SEATS } from 'app/utils/util';
+import { APPSUMO_PLAN_SEATS, APP_SUMO_PLAN_NAME, CHATBOT_MAX_NUM, KB_MAX_NUM, NAMESPACES_MAX_NUM, PLANS_LIST, PLAN_NAME, PLAN_SEATS } from 'app/utils/util';
 
 @Component({
   selector: 'appdashboard-pricing-base',
@@ -23,6 +23,7 @@ export class PricingBaseComponent implements OnInit {
   APPSUMO_PLAN_SEATS = APPSUMO_PLAN_SEATS;
   CHATBOT_MAX_NUM = CHATBOT_MAX_NUM;
   KB_MAX_NUM = KB_MAX_NUM
+  NAMESPACES_MAX_NUM = NAMESPACES_MAX_NUM
 
 
   USER_ROLE: string;
@@ -48,12 +49,14 @@ export class PricingBaseComponent implements OnInit {
   public seatsLimit: any;
   public chatBotLimit: any;
   public kbLimit: any;
+  public nameSpacesLimit: any;
 
   // Translations params
   public tParamsFreePlanSeatsNum: any;
   public tParamsPlanAndSeats: any;
   public tParamsPlanAndChatBot: any;
   public tParamsPlanAndKb: any;
+  public tParamsPlanAndNamespaces: any;
   public tParamsPlanNameTrialExpired: any;
   public tParamsHoursAvailableFromPlan: any;
   public tParamsActivitiesFromPlan: any;
@@ -127,7 +130,6 @@ export class PricingBaseComponent implements OnInit {
 
           if (projectProfileData.profile_type === 'free') {
             if (projectProfileData.trial_expired === false) {
-
               // ------------------------------------------------------------------------ 
               // USECASE: Free Plan (TRIAL ACTIVE i.e. Scale trial)
               // ------------------------------------------------------------------------
@@ -150,6 +152,11 @@ export class PricingBaseComponent implements OnInit {
                   this.kbLimit = null;
                   // console.log('[P-BASE] - SCALE TRIAL PLAN - KB LIMIT ', this.kbLimit)
 
+                  this.nameSpacesLimit = NAMESPACES_MAX_NUM[PLAN_NAME.B];
+                  console.log('[P-BASE] - SCALE (TRIAL PLAN) - NS LIMIT - PAY TRUE', this.nameSpacesLimit)
+                  this.tParamsPlanAndNamespaces = { plan_name: this.prjct_profile_name, allowed_ns: this.nameSpacesLimit }
+                  console.log('[P-BASE] - SCALE (TRIAL PLAN) - tParamsPlanAndNamespaces - PAY TRUE', this.tParamsPlanAndNamespaces)
+                 
                   // Translate params
                   this.tParamsActivitiesFromPlan = { plan_name: PLAN_NAME.F }
                   this.tParamsPlanNameTrialExpired = { plan_name: PLAN_NAME.B }
@@ -161,6 +168,8 @@ export class PricingBaseComponent implements OnInit {
                   this.chatBotLimit = 1000
                   this.seatsLimit = 1000;
                   this.kbLimit = null;
+                  this.nameSpacesLimit = NAMESPACES_MAX_NUM.free;
+                  console.log('[P-BASE] - SCALE (TRIAL PLAN) - NS LIMIT PAY FALSE ', this.nameSpacesLimit)
 
                   this.tParamsActivitiesFromPlan = { plan_name: PLAN_NAME.F }
                   this.tParamsPlanNameTrialExpired = { plan_name: PLAN_NAME.B }
@@ -192,6 +201,8 @@ export class PricingBaseComponent implements OnInit {
                     // console.log('[P-BASE] - SANDBOX (TRIAL ACTIVE) - CHATBOTS DEFAULT LIMIT   ', this.chatBotLimit)
                   }
 
+                  
+
                   this.tParamsPlanAndChatBot = { plan_name: this.prjct_profile_name, allowed_cb_num: this.chatBotLimit }
                   // console.log('[P-BASE] - GET PROJECT PLAN - CB LIMIT ', this.chatBotLimit)
 
@@ -204,9 +215,12 @@ export class PricingBaseComponent implements OnInit {
                     // console.log('[P-BASE] - SANDBOX (TRIAL ACTIVE) - KB DEFAULT LIMIT   ', this.kbLimit)
                   }
 
-
                   this.tParamsPlanAndKb = { plan_name: this.prjct_profile_name, allowed_kb_num: this.kbLimit }
-                  // console.log('[P-BASE] - GET PROJECT PLAN - KB LIMIT ', this.kbLimit)
+                  // console.log('[P-BASE] - GET PROJECT PLAN - tParamsPlanAndKb ', this.tParamsPlanAndKb)
+
+                  this.nameSpacesLimit = NAMESPACES_MAX_NUM[PLAN_NAME.E];
+                  console.log('[P-BASE] - SANDBOX (TRIAL ACTIVE) - NS LIMIT   ', this.nameSpacesLimit)
+                  this.tParamsPlanAndNamespaces = { plan_name: this.prjct_profile_name, allowed_ns: this.nameSpacesLimit }
 
                   // Translate params 
                   this.tParamsActivitiesFromPlan = { plan_name: PLAN_NAME.F }
@@ -219,6 +233,7 @@ export class PricingBaseComponent implements OnInit {
                   this.chatBotLimit = 1000
                   this.seatsLimit = 1000;
                   this.kbLimit = null;
+                  this.nameSpacesLimit = NAMESPACES_MAX_NUM.free;
 
                   this.tParamsActivitiesFromPlan = { plan_name: PLAN_NAME.F }
                   this.tParamsEmailTicketingFromPlan = { plan_name: PLAN_NAME.F }
@@ -259,6 +274,12 @@ export class PricingBaseComponent implements OnInit {
                   // }
                   this.tParamsPlanAndKb = { plan_name: this.prjct_profile_name, allowed_kb_num: this.kbLimit }
 
+                  this.nameSpacesLimit = NAMESPACES_MAX_NUM.free;
+                  console.log('[P-BASE] - FREE PLAN (TRIAL EXPIRED)- NS LIMIT   ', this.nameSpacesLimit)
+                  
+                  this.tParamsPlanAndNamespaces = { plan_name: this.prjct_profile_name, allowed_ns: this.nameSpacesLimit }
+                  console.log('[P-BASE] - FREE PLAN (TRIAL EXPIRED)- tParamsPlanAndNamespaces   ', this.tParamsPlanAndNamespaces)
+
                   this.profile_name_for_segment = this.prjct_profile_name
 
                   // --------------------------------------------------------------------------------
@@ -291,6 +312,11 @@ export class PricingBaseComponent implements OnInit {
                   this.chatBotLimit = 1000
                   this.seatsLimit = 1000;
                   this.kbLimit = null;
+
+                  this.nameSpacesLimit = NAMESPACES_MAX_NUM.free;
+                  console.log('[P-BASE] - FREE PLAN (TRIAL EXPIRED)- NS LIMIT  (PAY false) ', this.nameSpacesLimit)
+                  
+             
                   // console.log('[P-BASE] - FREE PLAN (TRIAL EXPIRED - on premise)- CB  LIMIT ', this.chatBotLimit)
                   // console.log('[P-BASE] - FREE PLAN (TRIAL EXPIRED - on premise)- KB  LIMIT ', this.kbLimit)
 
