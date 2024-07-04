@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { KB, KbSettings } from 'app/models/kbsettings-model';
 import { KB_LIMIT_CONTENT } from 'app/utils/util';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { LoggerService } from 'app/services/logger/logger.service';
 
 @Component({
   selector: 'modal-site-map',
@@ -35,7 +36,8 @@ export class ModalSiteMapComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<ModalSiteMapComponent>,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private logger: LoggerService
   ) { }
 
   ngOnInit(): void {
@@ -65,11 +67,11 @@ export class ModalSiteMapComponent implements OnInit {
   }
 
   // ngOnChanges(changes: SimpleChanges){
-  //   // console.log('ModalSiteMapComponent changes: ', changes);
+  //   // this.logger.log('ModalSiteMapComponent changes: ', changes);
   //   if(this.listSitesOfSitemap.length > 0){
   //     this.buttonDisabled = false;
   //     this.listOfUrls = this.listSitesOfSitemap.join('\n');
-  //     // console.log('ModalSiteMapComponent listOfUrls: ', this.listOfUrls);
+  //     // this.logger.log('ModalSiteMapComponent listOfUrls: ', this.listOfUrls);
   //     this.countSitemap = this.listSitesOfSitemap.length;
   //     this.isSitemapLoaded = true;
   //   } else {
@@ -129,7 +131,7 @@ export class ModalSiteMapComponent implements OnInit {
     let body = {
       'sitemap': this.kb.url
     }
-    // console.log('[MODAL-SITE-MAP] onSendSitemap body ', body)
+    // this.logger.log('[MODAL-SITE-MAP] onSendSitemap body ', body)
     this.buttonDisabled = true;
 
     const event = new CustomEvent("on-send-sitemap", { detail:  body  });

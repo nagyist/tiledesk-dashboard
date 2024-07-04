@@ -956,7 +956,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
       },
     });
     dialogRef.afterClosed().subscribe(result => {
-      console.log('[ModalPreview] Dialog AFTER CLOSED result : ', result);
+      this.logger.log('[ModalPreview] Dialog AFTER CLOSED result : ', result);
       if (result === undefined) {
         this.kbService.modalPreviewKbHasBeenClosed()
       }
@@ -1541,7 +1541,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
       this.logger.log("[KNOWLEDGE BASES COMP] get kbList resp: ", resp);
       //this.kbs = resp;
       this.kbsListCount = resp.count;
-      console.log('[KNOWLEDGE BASES COMP] kbsListCount ', this.kbsListCount)
+      this.logger.log('[KNOWLEDGE BASES COMP] kbsListCount ', this.kbsListCount)
       this.logger.log('[KNOWLEDGE BASES COMP] resp.kbs ', resp.kbs)
       resp.kbs.forEach((kb: any, i: number) => {
         // this.kbsList.push(kb);

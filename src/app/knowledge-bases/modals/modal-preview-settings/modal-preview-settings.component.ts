@@ -2,6 +2,7 @@ import { Component, EventEmitter, Inject, Input, OnChanges, OnInit, Output, Simp
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AppConfigService } from 'app/services/app-config.service';
 import { KnowledgeBaseService } from 'app/services/knowledge-base.service';
+import { LoggerService } from 'app/services/logger/logger.service';
 import { TYPE_GPT_MODEL, loadTokenMultiplier } from 'app/utils/util';
 @Component({
   selector: 'modal-preview-settings',
@@ -62,20 +63,21 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
     public dialogRef: MatDialogRef<ModalPreviewSettingsComponent>,
     public appConfigService: AppConfigService,
     private kbService: KnowledgeBaseService,
+    private logger: LoggerService
   ) { 
-    console.log("[MODAL PREVIEW SETTINGS] data ", data)
+    this.logger.log("[MODAL PREVIEW SETTINGS] data ", data)
     if (data && data.selectedNamespace) {
       this.selectedNamespace = data.selectedNamespace
-      console.log("[MODAL PREVIEW SETTINGS] selectedNamespace ", this.selectedNamespace)
+      this.logger.log("[MODAL PREVIEW SETTINGS] selectedNamespace ", this.selectedNamespace)
       this.selectedNamespaceClone=JSON.parse(JSON.stringify(this.selectedNamespace))
 
-      console.log("[MODAL PREVIEW SETTINGS] selectedNamespace ", this.selectedNamespace)
+      this.logger.log("[MODAL PREVIEW SETTINGS] selectedNamespace ", this.selectedNamespace)
 
 
-      console.log("[MODAL PREVIEW SETTINGS] selectedNamespaceClone ", this.selectedNamespaceClone)
+      this.logger.log("[MODAL PREVIEW SETTINGS] selectedNamespaceClone ", this.selectedNamespaceClone)
 
       this.selectedNamespace.preview_settings
-      // console.log("[MODAL PREVIEW SETTINGS] selectedNamespace > selectedNamespace.preview_settings", this.selectedNamespace.preview_settings) 
+      // this.logger.log("[MODAL PREVIEW SETTINGS] selectedNamespace > selectedNamespace.preview_settings", this.selectedNamespace.preview_settings) 
       // if (namespaceAiSettings.model === "gpt-3.5-turbo") {
       //   this.selectedModel = this.models_list[0].value;
       // } else if (namespaceAiSettings.model === "gpt-4") {
@@ -85,16 +87,16 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
       // } else if (namespaceAiSettings.model === "gpt-4o" ) {
       //   this.selectedModel = this.models_list[3].value;
       // }
-      // console.log("[MODAL PREVIEW SETTINGS] selectedModel ", this.selectedModel)
+      // this.logger.log("[MODAL PREVIEW SETTINGS] selectedModel ", this.selectedModel)
 
       this.max_tokens =  this.selectedNamespace.preview_settings.max_tokens;
-      console.log("[MODAL PREVIEW SETTINGS] max_tokens ", this.max_tokens)
+      this.logger.log("[MODAL PREVIEW SETTINGS] max_tokens ", this.max_tokens)
 
       this.temperature = this.selectedNamespace.preview_settings.temperature
-      console.log("[MODAL PREVIEW SETTINGS] temperature ", this.temperature)
+      this.logger.log("[MODAL PREVIEW SETTINGS] temperature ", this.temperature)
 
       this.topK = this.selectedNamespace.preview_settings.top_k
-      console.log("[MODAL PREVIEW SETTINGS] topK ", this.topK)
+      this.logger.log("[MODAL PREVIEW SETTINGS] topK ", this.topK)
       
       
       this.context = this.selectedNamespace.preview_settings.context
@@ -112,9 +114,9 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    // console.log("[MODAL PREVIEW SETTINGS] on init")
+    // this.logger.log("[MODAL PREVIEW SETTINGS] on init")
     const ai_models = loadTokenMultiplier(this.appConfigService.getConfig().aiModels)
-    // console.log("[MODAL PREVIEW SETTINGS] ai_models ", ai_models)
+    // this.logger.log("[MODAL PREVIEW SETTINGS] ai_models ", ai_models)
 
     this.model_list = Object.values(TYPE_GPT_MODEL).filter(el=> el.status !== 'inactive').map((el)=> {
       if(ai_models[el.value])
@@ -123,7 +125,7 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
         return { ...el, multiplier: null }
     })
 
-    // console.log("[MODAL PREVIEW SETTINGS] model_list ", this.model_list )
+    // this.logger.log("[MODAL PREVIEW SETTINGS] model_list ", this.model_list )
        if (this.selectedNamespace.preview_settings.model === "gpt-3.5-turbo") {
         this.selectedModel = this.model_list[0].value;
       } else if (this.selectedNamespace.preview_settings.model === "gpt-4") {
@@ -133,58 +135,58 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
       } else if (this.selectedNamespace.preview_settings.model === "gpt-4o" ) {
         this.selectedModel = this.model_list[3].value;
       }
-      // console.log("[MODAL PREVIEW SETTINGS] selectedModel ", this.selectedModel)
+      // this.logger.log("[MODAL PREVIEW SETTINGS] selectedModel ", this.selectedModel)
 
     
 
       // if(this.selectedModel !== this.selectedNamespaceClone.preview_settings.model) {
       //   this.countOfOverrides =  this.countOfOverrides + 1;
       //   this.hasAlreadyOverridedModel = true;
-      //   console.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedModel", this.hasAlreadyOverridedModel)
+      //   this.logger.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedModel", this.hasAlreadyOverridedModel)
       // }
 
       // if(this.max_tokens !== this.selectedNamespaceClone.preview_settings.max_tokens) {
       //   this.countOfOverrides =  this.countOfOverrides + 1;
       //   this.hasAlreadyOverridedMaxTokens = true;
-      //    console.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedMaxTokens", this.hasAlreadyOverridedMaxTokens)
+      //    this.logger.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedMaxTokens", this.hasAlreadyOverridedMaxTokens)
       // }
 
       // // if(this.temperature !== this.temperatureDefaultValue) {
       // if(this.temperature !== this.selectedNamespace.preview_settings.temperature) {
       //   this.countOfOverrides =  this.countOfOverrides + 1;
       //   this.hasAlreadyOverridedTemperature = true;
-      //   console.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedTemperature", this.hasAlreadyOverridedTemperature)
+      //   this.logger.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedTemperature", this.hasAlreadyOverridedTemperature)
       // }
 
       // if(this.topK !== this.selectedNamespace.preview_settings.top_k) {
       //   this.countOfOverrides =  this.countOfOverrides + 1
       //   this.hasAlreadyOverridedTopk = true;
-      //   console.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedTopk", this.hasAlreadyOverridedTopk)
+      //   this.logger.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedTopk", this.hasAlreadyOverridedTopk)
       // }
 
 
       // if (this.context !== this.selectedNamespace.preview_settings.context) {
       //   this.countOfOverrides =  this.countOfOverrides + 1;
       //   this.hasAlreadyOverridedContex = true
-      //   console.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedContex", this.hasAlreadyOverridedContex)
+      //   this.logger.log("[MODAL PREVIEW SETTINGS] onInit hasAlreadyOverridedContex", this.hasAlreadyOverridedContex)
       // }
 
   }
   ngOnChanges(changes: SimpleChanges): void {
-    // console.log("[MODAL PREVIEW SETTINGS] namespaceid ", this.selectedNamespace)
+    // this.logger.log("[MODAL PREVIEW SETTINGS] namespaceid ", this.selectedNamespace)
     this.namespaceid = this.selectedNamespace.id
   }
 
 
   onSelectModel(selectedModel) {
-    // console.log("[MODAL PREVIEW SETTINGS] onSelectModel selectedModel", selectedModel)
+    // this.logger.log("[MODAL PREVIEW SETTINGS] onSelectModel selectedModel", selectedModel)
     if (!this.wasOpenedFromThePreviewKBModal) {
       this.selectedNamespace.preview_settings.model = selectedModel
     }
 
     // Comunicate to the subscriber "modal-preview-k-b" the change of the model
     this.aiSettingsObject[0].model = selectedModel
-    console.log("[MODAL PREVIEW SETTINGS] onSelectModel aiSettingsObject", this.aiSettingsObject)
+    this.logger.log("[MODAL PREVIEW SETTINGS] onSelectModel aiSettingsObject", this.aiSettingsObject)
     this.kbService.hasChagedAiSettings(this.aiSettingsObject )
 
     if(selectedModel !== this.modelDefaultValue) {
@@ -198,9 +200,9 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
   }
 
   updateSliderValue(value, type) {
-    //console.log("[MODAL PREVIEW SETTINGS] value: ", value);
-    // console.log("[MODAL PREVIEW SETTINGS] type: ", type);
-    console.log("[MODAL PREVIEW SETTINGS] wasOpenedFromThePreviewKBModal: ", this.wasOpenedFromThePreviewKBModal);
+    //this.logger.log("[MODAL PREVIEW SETTINGS] value: ", value);
+    //this.logger.log("[MODAL PREVIEW SETTINGS] type: ", type);
+    this.logger.log("[MODAL PREVIEW SETTINGS] wasOpenedFromThePreviewKBModal: ", this.wasOpenedFromThePreviewKBModal);
     if (type === "max_tokens") {
       if (!this.wasOpenedFromThePreviewKBModal) {
         this.selectedNamespace.preview_settings.max_tokens = value
@@ -218,7 +220,7 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
       
       // Comunicate to the subscriber "modal-preview-k-b" the change of the max_tokens
       this.aiSettingsObject[0].maxTokens = value
-      console.log("[MODAL PREVIEW SETTINGS] updateSliderValue aiSettingsObject", this.aiSettingsObject)
+      this.logger.log("[MODAL PREVIEW SETTINGS] updateSliderValue aiSettingsObject", this.aiSettingsObject)
       this.kbService.hasChagedAiSettings(this.aiSettingsObject )
     }
 
@@ -239,7 +241,7 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
        
       // Comunicate to the subscriber "modal-preview-k-b" the change of the temperature
       this.aiSettingsObject[0].temperature = value
-      console.log("[MODAL PREVIEW SETTINGS] updateSliderValue aiSettingsObject", this.aiSettingsObject)
+      this.logger.log("[MODAL PREVIEW SETTINGS] updateSliderValue aiSettingsObject", this.aiSettingsObject)
       this.kbService.hasChagedAiSettings(this.aiSettingsObject )
     }
 
@@ -260,18 +262,18 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
 
       // Comunicate to the subscriber "modal-preview-k-b" the change of the topK
       this.aiSettingsObject[0].top_k = value
-      console.log("[MODAL PREVIEW SETTINGS] updateSliderValue aiSettingsObject", this.aiSettingsObject)
+      this.logger.log("[MODAL PREVIEW SETTINGS] updateSliderValue aiSettingsObject", this.aiSettingsObject)
       this.kbService.hasChagedAiSettings(this.aiSettingsObject )
     }
 
-    // console.log("[MODAL PREVIEW SETTINGS] updateSliderValue selectedNamespace", this.selectedNamespace)
+    // this.logger.log("[MODAL PREVIEW SETTINGS] updateSliderValue selectedNamespace", this.selectedNamespace)
   }
 
  
 
 
   onChangeTextInContex(event) {
-    // console.log("[MODAL PREVIEW SETTINGS] onChangeTextInContex event: ", event);
+    // this.logger.log("[MODAL PREVIEW SETTINGS] onChangeTextInContex event: ", event);
     this.context = event
     if (!this.wasOpenedFromThePreviewKBModal) {
       this.selectedNamespace.preview_settings.context = this.context
@@ -286,16 +288,16 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
     } else {
       this.countOfOverrides =  this.countOfOverrides - 1;
     }
-    // console.log("[MODAL PREVIEW SETTINGS] onChangeTextInContex selectedNamespace", this.selectedNamespace)
+    // this.logger.log("[MODAL PREVIEW SETTINGS] onChangeTextInContex selectedNamespace", this.selectedNamespace)
   
     // Comunicate to the subscriber "modal-preview-k-b" the change of the context
     this.aiSettingsObject[0].context = event
-    console.log("[MODAL PREVIEW SETTINGS] updateSliderValue aiSettingsObject", this.aiSettingsObject)
+    this.logger.log("[MODAL PREVIEW SETTINGS] updateSliderValue aiSettingsObject", this.aiSettingsObject)
     this.kbService.hasChagedAiSettings(this.aiSettingsObject )
 }
 
   onSavePreviewSettings() {
-    // console.log('[MODAL PREVIEW SETTINGS] onSavePreviewSettings')
+    // this.logger.log('[MODAL PREVIEW SETTINGS] onSavePreviewSettings')
     this.dialogRef.close({action: "update", selectedNamespace: this.selectedNamespace});
   }
 
@@ -320,7 +322,7 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
     this.selectedModel = this.selectedNamespaceClone.preview_settings.model;
     // this.selectedNamespace.preview_settings.model = this.modelDefaultValue
 
-    console.log('[MODAL PREVIEW SETTINGS] RESET TO DEFAULT selectedModel', this.selectedModel)
+    this.logger.log('[MODAL PREVIEW SETTINGS] RESET TO DEFAULT selectedModel', this.selectedModel)
     this.max_tokens =  this.selectedNamespaceClone.preview_settings.max_tokens;
     // this.selectedNamespace.preview_settings.max_tokens = this.maxTokensDefaultValue;
 
@@ -348,7 +350,7 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
     this.selectedModel = this.model_list[0].value;
     this.selectedNamespace.preview_settings.model = this.modelDefaultValue
 
-    console.log('[MODAL PREVIEW SETTINGS] RESET TO DEFAULT selectedModel', this.selectedModel)
+    this.logger.log('[MODAL PREVIEW SETTINGS] RESET TO DEFAULT selectedModel', this.selectedModel)
     this.max_tokens =  this.maxTokensDefaultValue;
     this.selectedNamespace.preview_settings.max_tokens = this.maxTokensDefaultValue;
 
