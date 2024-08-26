@@ -42,6 +42,8 @@ import { ShepherdService } from 'angular-shepherd';
 import { getSteps as defaultSteps, defaultStepOptions } from './knowledge-bases.tour.config';
 
 import Step from 'shepherd.js/src/types/step';
+import { ModalChatbotComponent } from './modals/modal-chatbot/modal-chatbot.component';
+
 // import {
 //   // provideHighlightOptions,
 //   Highlight,
@@ -856,7 +858,8 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
 
   presentDialogChatbotname(chatbot) {
     this.logger.log('[KNOWLEDGE-BASES-COMP] openDialog presentDialogChatbotname chatbot ', chatbot)
-    const dialogRef = this.dialog.open(ModalChatbotNameComponent, {
+    // const dialogRef = this.dialog.open(ModalChatbotNameComponent, {
+    const dialogRef = this.dialog.open(ModalChatbotComponent, {
       backdropClass: 'cdk-overlay-transparent-backdrop',
       hasBackdrop: true,
       width: '600px',
@@ -865,10 +868,14 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
       },
     });
 
-    dialogRef.afterClosed().subscribe(editedChatbot => {
-      if (editedChatbot) {
-        this.logger.log(`[KNOWLEDGE-BASES-COMP] DIALOG CHATBOT NAME editedChatbot:`, editedChatbot);
-        this.importChatbotFromJSON(editedChatbot)
+    dialogRef.afterClosed().subscribe(importedChatbot => {
+      if (importedChatbot) {
+        console.log(`[KNOWLEDGE-BASES-COMP] DIALOG CHATBOT NAME importedChatbot:`, importedChatbot);
+        // this.importChatbotFromJSON(editedChatbot)
+        this.getChatbotUsingNamespace(this.selectedNamespace.id)
+
+        this.getDeptsByProjectId(importedChatbot)
+
       }
     });
   }
@@ -914,7 +921,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
           this.logger.log('[KNOWLEDGE-BASES-COMP] ---> USECASE DEPTS LENGHT = 1 - DEFAULT DEPT HAS BOT ', departments[0].hasBot);
           this.logger.log('[KNOWLEDGE-BASES-COMP] ---> USECASE DEPTS LENGHT = 1 - DEFAULT DEPT HAS BOT ', departments[0]);
           if (departments[0].hasBot === true) {
-            this.presentDialogChatbotSuccessfullyCreated()
+            this.presentDialogChatbotSuccessfullyCreated() // nk
 
             this.logger.log('[KNOWLEDGE-BASES-COMP] --->  DEFAULT DEPT HAS BOT ');
             // this.DISPLAY_BTN_ACTIVATE_BOT_FOR_NEW_CONV = false;
@@ -926,7 +933,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
             this.logger.log('[KNOWLEDGE-BASES-COMP] ---> USECASE DEPTS LENGHT = 1 DEFAULT DEPT NOT HAS BOT ', departments[0]);
             this.logger.log('[KNOWLEDGE-BASES-COMP] ---> USECASE DEPTS LENGHT = 1 DEFAULT DEPT NOT HAS BOT ', departments[0].hasBot);
             this.hookBotToDept(departments[0]._id, faqkb, 'hookToDefaultDept');
-            this.presentDialogChatbotSuccessfullyCreated()
+            this.presentDialogChatbotSuccessfullyCreated() // nk
 
 
             // this.DISPLAY_BTN_ACTIVATE_BOT_FOR_NEW_CONV = true;
@@ -947,7 +954,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
 
               // this.logger.log('[BOT-CREATE] --->  DEPT HAS BOT PRESENTS_MODAL_ATTACH_BOT_TO_DEPT ', this.PRESENTS_MODAL_ATTACH_BOT_TO_DEPT);
             } else {
-              this.logger.log('[KNOWLEDGE-BASES-COMP] ---> USECASE DEPTS LENGHT > 1  DEPT NOT HAS BOT ');
+              console.log('[KNOWLEDGE-BASES-COMP] ---> USECASE DEPTS LENGHT > 1  DEPT NOT HAS BOT ');
               // this.logger.log('[BOT-CREATE] --->  DEPT botType selected ', this.botType);
               // if (this.botType !== 'identity') {
               //   this.PRESENTS_MODAL_ATTACH_BOT_TO_DEPT = true;
@@ -1007,7 +1014,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
       // text: this.translate.instant('ChatbotSuccessfullyCreated'),
       title: this.translate.instant('ChatbotSuccessfullyCreated'),
       text: this.translate.instant('NowItIsTimeToAddContent') + ' !',
-      icon: "success",
+      // icon: "success",
       showCloseButton: false,
       showCancelButton: false,
       confirmButtonText: this.translate.instant('BotsPage.Continue') + ' ' + '<i class="fa fa-arrow-right">',

@@ -1,0 +1,187 @@
+<h1 mat-dialog-title>
+    <!-- {{ 'CreateChatbot' | translate }} -->
+    <!-- Choose a name for your chatbot -->
+    <span *ngIf="!HAS_CREATED_CB">
+        {{ 'ChooseNameForYourChatbot' | translate }}
+    </span>
+    <!-- <span *ngIf="HAS_CREATED_CB">
+        Choose a bot avatar or upload your own
+    </span> -->
+</h1>
+
+<div mat-dialog-content>
+
+    <mat-form-field *ngIf="!HAS_CREATED_CB" appearance="fill" class="cc-mat-form-field">
+        <mat-label>
+            <!-- Chatbot name -->
+            <!-- {{ "ChatbotName" | translate }} -->
+            <!-- My assistant name -->
+            {{'MyAssistantName' | translate}}
+
+        </mat-label>
+        <input placeholder="My assistant name" matInput [(ngModel)]="chatbotName"
+            (ngModelChange)="onChangeChatbotName($event)">
+    </mat-form-field>
+
+
+    <div *ngIf="HAS_CREATED_CB" class="chatbot-successfully-created">
+
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2">
+            <circle class="path circle" fill="none" stroke="#73AF55" stroke-width="6" stroke-miterlimit="10" cx="65.1"
+                cy="65.1" r="62.1" />
+            <polyline class="path check" fill="none" stroke="#73AF55" stroke-width="6" stroke-linecap="round"
+                stroke-miterlimit="10" points="100.2,40.2 51.5,88.8 29.8,67.5 " />
+        </svg>
+        <p class="success">Chatbot Successfully Created! </p>
+
+    </div>
+
+    <div *ngIf="HAS_CREATED_CB" class="modal-chatbot-upload-image">
+        <div class="chatbot-avatar--label"> Upload your own chatbot avatar </div>
+        
+        <div class="BotStyledStep2__BotImagePreviewWrapper-sc-7ins27-1 chatbot-avatar-wpr">
+            <div class="chatbot-avatar-label erWXmW">
+                <!-- Avatar -->
+                
+
+            </div>
+            <div class="BotStyledStep2__BotImagePreviewContainer-sc-7ins27-2 chatbot-avatar-container">
+
+                <!-- <img 
+                      style="vertical-align: middle; width: 80px; height: 80px; border-radius: 50%; border: 1px solid #eee; margin-right: 15px; object-fit: cover"
+                      class="user-img" [src]="getBotProfileImage()"
+                      onerror="this.src='assets/img/avatar_bot_tiledesk.svg'" /> -->
+
+
+                    <!-- <img *ngIf="botProfileImageExist === false"
+                      style="vertical-align: middle; width: 80px; height: 80px; border-radius: 50%; border: 1px solid #eee; margin-right: 15px; object-fit: cover"
+                      class="user-img" src="assets/img/avatar_bot_tiledesk.svg" /> -->
+
+                 <img *ngIf="UPLOAD_ENGINE_IS_FIREBASE && botProfileImageExist === true" class="cb-profile-image"
+                      src="https://firebasestorage.googleapis.com/v0/b/{{storageBucket}}/o/profiles%2F{{id_faq_kb}}%2Fphoto.jpg?alt=media"
+                      onerror="this.src='assets/img/avatar_bot_tiledesk.svg'" />
+
+                      <!-- UPLOAD_ENGINE_IS_FIREBASE >  {{UPLOAD_ENGINE_IS_FIREBASE}}  baseUrl ->  {{ baseUrl }} id_faq_kb -> {{id_faq_kb}} -->
+                  <img *ngIf="!UPLOAD_ENGINE_IS_FIREBASE && botProfileImageExist === true" class="cb-profile-image"
+                      src="{{baseUrl}}images?path=uploads%2Fusers%2F{{id_faq_kb}}%2Fimages%2Fthumbnails_200_200-photo.jpg"
+                      onerror="this.src='assets/img/avatar_bot_tiledesk.svg'" />
+
+                      <img *ngIf="botProfileImageExist === false" class="cb-profile-image"
+                       src="assets/img/avatar_bot_tiledesk.svg" />
+            </div>
+            <div class="upload-delete-btns-wpr">
+
+            <input #fileInputBotProfileImage class="inputfile" name="uploadbotimage" id="uploadbotimage"
+                type="file" (change)="upload($event)" accept=".jpg, .JPEG, .png" />
+              
+                <label class="btn btn-white upload-image-btn" for="uploadbotimage">
+
+                    <span *ngIf="!showSpinnerInUploadImageBtn">
+                    {{ "UserProfile.UploadImage" | translate }}
+                    </span>
+                    <span *ngIf="showSpinnerInUploadImageBtn">
+                    {{ 'VisitorsPage.Loading' | translate }}
+                    <i class="fa fa-spinner fa-spin"></i>
+                    </span>
+                </label>
+
+              <button class="btn btn-white delete_bot_image_btn" (click)="deleteBotProfileImage()"
+                style="">
+                <span class="material-icons" style="">
+                  delete_forever
+                </span>
+
+                <!-- <span class="bottom"
+                  style="min-width: fit-content;padding: 5px;border-radius: 3px; text-transform: none;">
+                  {{'RemovePhoto' | translate}}
+                  <i></i>
+                </span> -->
+              </button>
+
+            </div>
+        </div>
+
+
+        <!-- <div class="modal-chatbot-upload-image-section-title"> Choose a bot avatar or upload your own </div> -->
+        <!-- <div class="chatbot-avatar-images" style="display: flex;flex-flow: wrap; width: 60%;">
+
+            <label for="km-upload-bot-image-select" id="bot-integration-upload-bot-image-0"
+                class="BotStyledStep2__UploadCircle-sc-7ins27-10 khRIdT">
+                <div class="BotStyledStep2__UploadIconContainer-sc-7ins27-11 gFVGYA">
+                    <svg width="14" height="17" viewBox="0 0 14 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M-6.10352e-05 1.5C-6.10352e-05 2.05 0.449939 2.5 0.999939 2.5H12.9999C13.5499 2.5 13.9999 2.05 13.9999 1.5C13.9999 0.95 13.5499 0.5 12.9999 0.5H0.999939C0.449939 0.5 -6.10352e-05 0.95 -6.10352e-05 1.5ZM2.40994 10.5H3.99994V15.5C3.99994 16.05 4.44994 16.5 4.99994 16.5H8.99994C9.54994 16.5 9.99994 16.05 9.99994 15.5V10.5H11.5899C12.4799 10.5 12.9299 9.42 12.2999 8.79L7.70994 4.2C7.31994 3.81 6.68994 3.81 6.29994 4.2L1.70994 8.79C1.07994 9.42 1.51994 10.5 2.40994 10.5Z"
+                            fill="#CAD3E3"></path>
+                    </svg>
+                </div>
+                upload
+            </label>
+          
+            <input #fileInputBotProfileImage class="km-hide-input-element" type="file" dir="auto"
+                id="km-upload-bot-image-select" accept=".jpg, .JPEG, .png" style="display: none;"
+                (change)="upload($event)">
+
+            <div id="bot-integration-upload-bot-image-1" class="BotStyledStep2__BotIconSvgContainer-sc-7ins27-8 hZiiUe">
+                <svg data-name="prefix Layer 1" viewBox="0 0 563.66 563.66">
+                    <path
+                        d="M563.66 281.83c0 115.2-69.12 214.26-168.16 258a282.72 282.72 0 01-218.12 3.86C73.44 502.17 0 400.58 0 281.83 0 126.18 126.18 0 281.83 0s281.83 126.18 281.83 281.83z"
+                        fill="#6353d8"></path>
+                    <path
+                        d="M563.66 281.83c0 155.65-126.18 281.83-281.83 281.83a281 281 0 01-104.41-20q-4.66-1.84-9.25-3.88C69.13 496.1 0 397 0 281.83 0 126.18 126.18 0 281.83 0s281.83 126.18 281.83 281.83z"
+                        fill="none"></path>
+                    <path d="M277.75 77.19h8.16v49.67h-8.16z" fill="#c0baef"></path>
+                    <path
+                        d="M77.12 264.28V282a39 39 0 0029.09 37.57 127.73 127.73 0 01-8-44.58v-3.7a127.73 127.73 0 018-44.58 39.12 39.12 0 00-29.09 37.57zm212.59 167.51a104.68 104.68 0 0140.83 8.26v-36.32h-97.41v36.32a104.68 104.68 0 0140.87-8.26zM287.27 43a21.64 21.64 0 0112.4 4 21.73 21.73 0 10-30.24 30.23A21.71 21.71 0 01287.27 43z"
+                        fill="#e4e4f9"></path>
+                    <path
+                        d="M303.58 59.35A21.64 21.64 0 00299.67 47a21.71 21.71 0 00-30.24 30.23 21.72 21.72 0 0034.15-17.83zM274 431.79a104.68 104.68 0 00-40.83 8.26c-38.06 16.06-65 53.8-65 97.53v2.22q4.58 2 9.25 3.88v-6.1c0-43.73 26.89-81.47 65-97.53a104.7 104.7 0 0140.76-8.26zM107.5 274.93v-3.7c0-59.83 41.34-110.47 96.87-124.76a126.25 126.25 0 0131.78-4.07H227a126.73 126.73 0 00-31.9 4.07c-55.54 14.29-96.88 64.93-96.88 124.76v3.7c0 59.83 41.34 110.46 96.88 124.76a126.74 126.74 0 0031.91 4h8.9a126.9 126.9 0 01-31.57-4c-55.5-14.3-96.84-64.93-96.84-124.76z"
+                        fill="#fff"></path>
+                    <path
+                        d="M331.43 440.47c-.3-.13-.59-.29-.89-.42a104.68 104.68 0 00-40.83-8.26h-6.5a104.68 104.68 0 00-40.83 8.26c-38.07 16.06-65 53.8-65 97.53v6.08a282.72 282.72 0 00218.12-3.86v-2.22c0-43.38-26.5-80.84-64.07-97.11zm126-213.83c-18.27-49-65.62-84.22-120.8-84.22H236.29a126.27 126.27 0 00-31.9 4.07c-55.53 14.29-96.87 64.93-96.87 124.76V275c0 59.83 41.34 110.46 96.87 124.76a126.81 126.81 0 0031.92 4h100.34c55.18 0 102.53-35.13 120.8-84.21a127.83 127.83 0 008-44.59v-3.69a127.73 127.73 0 00-8-44.63z"
+                        fill="#fff"></path>
+                    <path
+                        d="M416.87 272.1v2a68.55 68.55 0 01-68.52 68.48h-133a68.72 68.72 0 01-68.52-68.52v-2a68.71 68.71 0 0168.49-68.48h133a68.56 68.56 0 0168.52 68.51z"
+                        fill="#7878ba"></path>
+                    <circle cx="218.64" cy="267.66" r="19.47" fill="#313444"></circle>
+                    <circle cx="345.03" cy="267.66" r="19.47" fill="#313444"></circle>
+                    <path
+                        d="M486.54 264.28V282a39 39 0 01-29.08 37.57 128 128 0 008-44.58v-3.7a127.77 127.77 0 00-8-44.58 39.12 39.12 0 0129.08 37.57zM319.27 142.42H244.4a41.06 41.06 0 0174.87 0z"
+                        fill="#e4e4f9"></path>
+                </svg>
+
+                <div class="BotStyledStep2__ImageSelectedTickContainer-sc-7ins27-9 izqEnY"><svg width="16" height="16"
+                        viewBox="0 0 16 16" fill="none">
+                        <circle cx="8" cy="8" r="8" fill="#64D9A8"></circle>
+                        <path
+                            d="M9.651 8.07l1.884-1.884a.674.674 0 000-.977.674.674 0 00-.977 0L6.512 9.326 5.186 8a.674.674 0 00-.977 0 .674.674 0 000 .977l1.814 1.814c.28.279.698.279.977 0L9.651 8.07z"
+                            fill="#fff"></path>
+                    </svg>
+                </div>
+            </div>
+        </div> -->
+
+    </div>
+</div>
+
+<div mat-dialog-actions style="justify-content: center;">
+    <button class="mat-dialog-close-btn" mat-button (click)="onNoClick()">
+        {{ "Cancel" | translate }}
+
+    </button>
+    <!-- [mat-dialog-close]="newKb.url" -->
+    <button *ngIf="!HAS_CREATED_CB" [disabled]="chatbotName?.length < 2" class="mat-dialog-ok-btn" mat-button
+        (click)="onOkPresssed(chatbotName)">
+
+
+        {{ "UserProfile.Continue" | translate }}
+
+
+    </button>
+    <button *ngIf="HAS_CREATED_CB" class="mat-dialog-ok-btn" mat-button (click)="onFinishPresssed(chatbotName)">
+
+        {{ "Create" | translate }}
+
+
+        <!-- UserProfile.Continue -->
+    </button>
+</div>

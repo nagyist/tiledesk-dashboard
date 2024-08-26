@@ -38,6 +38,8 @@ import { ModalNsLimitReachedComponent } from './modals/modal-ns-limit-reached/mo
 import { ModalConfirmGotoCdsComponent } from './modals/modal-confirm-goto-cds/modal-confirm-goto-cds.component';
 import { SatPopoverModule } from '@ncstate/sat-popover';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import { ModalChatbotComponent } from './modals/modal-chatbot/modal-chatbot.component';
+
 
 const routes: Routes = [
   { path: "", component: KnowledgeBasesComponent},
@@ -64,7 +66,8 @@ const routes: Routes = [
     ModalChatbotNameComponent,
     ModalHookBotComponent,
     ModalNsLimitReachedComponent,
-    ModalConfirmGotoCdsComponent
+    ModalConfirmGotoCdsComponent,
+    ModalChatbotComponent
   ],
   imports: [
     ClipboardModule,
