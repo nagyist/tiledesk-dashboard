@@ -229,32 +229,70 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
     }
    
     
-  
+    let requestCountRespCurrentValueAssigned: any
+    let requestCountRespPreviousValueAssigned: any
+    let requestCountRespCurrentValueAssignedToBot: any
+    let requestCountRespPreviousValueAssignedToBot: any
+    let requestCountRespCurrentValueUnassigned: any
+    let requestCountRespPreviousValueUnassigned: any
+    let isNewRequest = false
     if (changes?.current_selected_prjct || changes?.ws_requests_length && changes?.ws_requests_length?.previousValue === 0 || changes?.ws_requests_length?.previousValue === undefined) {
       // this.logger.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes.current_selected_prjct ', changes.current_selected_prjct)
       // this.logger.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes.ws_requests_length.previousValue ', changes.ws_requests_length.previousValue)
+      console.log('[WS-REQUEST-SERVED] ngOnChanges here 1', changes)
+      if (changes && changes.requestCountResp) {
+        if (changes.requestCountResp.currentValue && changes.requestCountResp.previousValue && changes.requestCountResp.previousValue !== undefined) {
+          requestCountRespCurrentValueAssigned = changes.requestCountResp.currentValue.assigned;
+          requestCountRespPreviousValueAssigned = changes.requestCountResp.previousValue.assigned;
+          requestCountRespCurrentValueAssignedToBot = changes.requestCountResp.currentValue.bot_assigned;
+          requestCountRespPreviousValueAssignedToBot  = changes.requestCountResp.previousValue.bot_assigned;
+          requestCountRespCurrentValueUnassigned = changes.requestCountResp.currentValue.unassigned;
+          requestCountRespPreviousValueUnassigned = changes.requestCountResp.previousValue.unassigned;
 
+          console.log('[WS-REQUEST-SERVED] ngOnChanges requestCountRespCurrentValueAssigned', requestCountRespCurrentValueAssigned)
+          console.log('[WS-REQUEST-SERVED] ngOnChanges requestCountRespPreviousValueAssigned ', requestCountRespPreviousValueAssigned)
+          console.log('[WS-REQUEST-SERVED] ngOnChanges requestCountRespCurrentValueAssignedToBot ', requestCountRespCurrentValueAssignedToBot)
+          console.log('[WS-REQUEST-SERVED] ngOnChanges requestCountRespPreviousValueAssignedToBot ', requestCountRespPreviousValueAssignedToBot)
+          console.log('[WS-REQUEST-SERVED] ngOnChanges requestCountRespCurrentValueAssignedToBot ', requestCountRespCurrentValueAssignedToBot)
+          console.log('[WS-REQUEST-SERVED] ngOnChanges requestCountRespPreviousValueAssignedToBot ', requestCountRespPreviousValueAssignedToBot)
+          console.log('[WS-REQUEST-SERVED] ngOnChanges requestCountRespCurrentValueUnassigned ', requestCountRespCurrentValueUnassigned)
+          console.log('[WS-REQUEST-SERVED] ngOnChanges requestCountRespCurrentValueUnassigned ', requestCountRespCurrentValueUnassigned)
+          
+          if((requestCountRespCurrentValueAssigned !== requestCountRespPreviousValueAssigned) ||  (requestCountRespCurrentValueAssignedToBot !== requestCountRespPreviousValueAssignedToBot) || (requestCountRespCurrentValueUnassigned !== requestCountRespPreviousValueUnassigned)) {
+            isNewRequest = true,
+            console.log('[WS-REQUEST-SERVED] isNewRequest' , isNewRequest)
 
-      if (this.wsRequestsServed.length > 0) {
-        setTimeout(() => {
-          scrollToWithAnimation(
-            this.scrollEl, // element to scroll
-            'scrollTop', // direction to scroll
-            +this.scrollYposition, // target scrollY (0 means top of the page)
-            500, // duration in ms
-            'easeInOutCirc', 
-            // Can be a name of the list of 'Possible easing equations' or a callback
-            // that defines the ease. # http://gizma.com/easing/
-       
-            () => { // callback function that runs after the animation (optional)
-              this.logger.log('done!')
-              this.storedRequestId = this.usersLocalDbService.getFromStorage('last-selection-id')
-              this.logger.log('[WS-REQUESTS-LIST][SERVED] storedRequestId',  this.storedRequestId)
+            if (this.wsRequestsServed.length > 0) {
+              if (isNewRequest) {
+                return
+              }
+              console.log('[WS-REQUEST-SERVED] ngOnChanges here 2', changes)
+              setTimeout(() => {
+                scrollToWithAnimation(
+                  this.scrollEl, // element to scroll
+                  'scrollTop', // direction to scroll
+                  +this.scrollYposition, // target scrollY (0 means top of the page)
+                  500, // duration in ms
+                  'easeInOutCirc', 
+                  // Can be a name of the list of 'Possible easing equations' or a callback
+                  // that defines the ease. # http://gizma.com/easing/
+             
+                  () => { // callback function that runs after the animation (optional)
+                    this.logger.log('done!')
+                    this.storedRequestId = this.usersLocalDbService.getFromStorage('last-selection-id')
+                    this.logger.log('[WS-REQUESTS-LIST][SERVED] storedRequestId',  this.storedRequestId)
+                  }
+                );
+              }, 100);
+      
             }
-          );
-        }, 100);
+          }
 
+        }
       }
+      
+      
+  
     }
   }
 
@@ -630,7 +668,8 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
 
 
   goToRequestMsgs(request_id: string) {
-    this.logger.log('[WS-REQUESTS-LIST][SERVED] GO TO REQUEST MSGS scrollEl scrollTop', this.scrollEl.scrollTop)
+    console.log('[WS-REQUESTS-SERVED] GO TO REQUEST MSGS scrollEl ', this.scrollEl)
+    console.log('[WS-REQUESTS-SERVED] GO TO REQUEST MSGS scrollEl scrollTop', this.scrollEl.scrollTop)
     this.logger.log("[WS-REQUESTS-LIST][SERVED] GO TO REQUEST MSGS ")
     this.router.navigate(['project/' + this.projectId + '/wsrequest/' + request_id + '/1' + '/messages/' + this.scrollEl.scrollTop]);
     this.usersLocalDbService.setInStorage('last-selection-id', request_id)
