@@ -262,10 +262,6 @@ export class WsRequestsListComponent extends WsSharedComponent implements OnInit
   }
   
 
-
-
-
-
   getBrowserVersion() {
     this.auth.isChromeVerGreaterThan100.subscribe((isChromeVerGreaterThan100: boolean) => {
       this.isChromeVerGreaterThan100 = isChromeVerGreaterThan100;

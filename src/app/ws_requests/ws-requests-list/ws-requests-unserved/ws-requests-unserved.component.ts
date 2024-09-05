@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, OnDestroy, SimpleChanges, HostListener } from '@angular/core';
 import { Request } from '../../../models/request-model';
 import { WsSharedComponent } from '../../ws-shared/ws-shared.component';
 import { BotLocalDbService } from '../../../services/bot-local-db.service';
@@ -118,6 +118,8 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
     this.getProjectUserRole();
     this.getRouteParams()
   }
+  
+  
 
   getRouteParams() {
     this.scrollEl = <HTMLElement>document.querySelector('.main-panel');
@@ -143,7 +145,7 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
 
 
   ngOnChanges(changes: SimpleChanges) {
-    this.logger.log('[WS-REQUEST-UNSERVED] from @Input »»» WebSocketJs WF - wsRequestsUnserved', this.wsRequestsUnserved)
+    // console.log('[WS-REQUEST-UNSERVED] from @Input »»» WebSocketJs WF - wsRequestsUnserved', this.wsRequestsUnserved)
     this.logger.log('[WS-REQUEST-UNSERVED] from @Input »»» WebSocketJs WF - wsRequestsUnserved length', this.wsRequestsUnserved.length)
     this.logger.log('[WS-REQUEST-UNSERVED] ngOnChanges changes', changes)
     // console.log('[WS-REQUEST-UNSERVED] ngOnChanges requestCountResp', this.requestCountResp)
@@ -161,8 +163,8 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
 
 
     if (changes?.current_selected_prjct || changes?.ws_requests_length && changes?.ws_requests_length?.previousValue === 0 || changes?.ws_requests_length?.previousValue === undefined) {
-      // this.logger.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes.current_selected_prjct ', changes.current_selected_prjct)
-      // this.logger.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes.ws_requests_length.previousValue ', changes.ws_requests_length.previousValue)
+      console.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes.current_selected_prjct ', changes.current_selected_prjct)
+      console.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes.ws_requests_length.previousValue ', changes.ws_requests_length.previousValue)
       this.logger.log('[WS-REQUEST-UNSERVED] ngOnChanges here 1', changes)
 
       if (this.wsRequestsUnserved.length > 0) {
@@ -193,6 +195,13 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
   ngOnDestroy() {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+onScroll(event: any): void {
+   console.log('[SIDEBAR] RICHIAMO ON SCROLL event ', event);
+    // this.elSidebarWrapper = <HTMLElement>document.querySelector('.sidebar-wrapper');
+    // this.scrollpos = this.elSidebarWrapper.scrollTop
+    // this.logger.log('[SIDEBAR] SCROLL POSITION', this.scrollpos)
   }
 
   // -------------------------------------------------------------
@@ -728,7 +737,10 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
       });
   }
 
-
+  trackById(index: number, item: any): number {
+    // console.log('[WS-UNSERVED-LIST] trackById ', item._id)
+    return item._id; // Assuming each item has a unique 'id'
+  }
   // IS USED WHEN IS GET A NEW MESSAGE (INN THIS CASE THE ONINIT IS NOT CALLED)
   // getWsRequestsUnservedLength() {
   //   if (this.ws_requests_length > 0) {
