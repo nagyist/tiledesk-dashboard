@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, OnDestroy, SimpleChanges, HostListener, AfterViewInit } from '@angular/core';
 import { Request } from '../../../models/request-model';
 import { WsSharedComponent } from '../../ws-shared/ws-shared.component';
 import { BotLocalDbService } from '../../../services/bot-local-db.service';
@@ -28,7 +28,7 @@ const Swal = require('sweetalert2')
   templateUrl: './ws-requests-unserved.component.html',
   styleUrls: ['./ws-requests-unserved.component.scss']
 })
-export class WsRequestsUnservedComponent extends WsSharedComponent implements OnInit, OnChanges, OnDestroy {
+export class WsRequestsUnservedComponent extends WsSharedComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
 
   @Input() wsRequestsUnserved: Request[];
   @Input() ws_requests_length: number
@@ -70,6 +70,8 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
   scrollYposition: any;
   storedRequestId: string
   CHANNELS_NAME = CHANNELS_NAME;
+  hasHover:boolean = false
+
   /**
    * Constructor
    * @param botLocalDbService 
@@ -105,19 +107,6 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
     super(botLocalDbService, usersLocalDbService, router, wsRequestsService, faqKbService, usersService, notify, logger, translate);
   }
 
-  // -------------------------------------------------------------
-  // @ Lifehooks
-  // -------------------------------------------------------------
-  ngOnInit() {
-
-    this.getCurrentProject();
-    this.getDepartments();
-    this.detectBrowserRefresh();
-    this.getTranslations();
-    this.getLoggedUser();
-    this.getProjectUserRole();
-    this.getRouteParams()
-  }
 
   getRouteParams() {
     this.scrollEl = <HTMLElement>document.querySelector('.main-panel');
@@ -127,20 +116,51 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
       if (params.scrollposition) {
         this.scrollYposition = params.scrollposition;
         this.logger.log('[WS-REQUESTS-LIST][UNSERVED] - scrollYposition', +this.scrollYposition);
-        // if (this.scrollEl) {
-        //   this.logger.log('[WS-REQUESTS-LIST][UNSERVED] scrollEl scrollTop', this.scrollEl.scrollTop)
-        //   setTimeout(() => {
-        //     this.scrollEl.scrollTo(0, +this.scrollYposition);
-        //   }, 1000);
-        // } else {
-        //   this.logger.error('[WS-REQUESTS-LIST][UNSERVED] scrollEl', this.scrollEl)
-        // }
+       
       }
     })
 
   }
 
+  // -------------------------------------------------------------
+  // @ Lifehooks
+  // -------------------------------------------------------------
+  ngOnInit() {
+    this.getCurrentProject();
+    this.getDepartments();
+    this.detectBrowserRefresh();
+    this.getTranslations();
+    this.getLoggedUser();
+    this.getProjectUserRole();
+    this.getRouteParams()
+  }
 
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      scrollToWithAnimation(
+        this.scrollEl, // element to scroll
+        'scrollTop', // direction to scroll
+        +this.scrollYposition, // target scrollY (0 means top of the page)
+        500, // duration in ms
+        'easeInOutCirc', 
+        // Can be a name of the list of 'Possible easing equations' or a callback
+        // that defines the ease. # http://gizma.com/easing/
+   
+        () => { // callback function that runs after the animation (optional)
+          this.logger.log('done!')
+          this.storedRequestId = this.usersLocalDbService.getFromStorage('last-selection-id')
+          this.logger.log('[WS-REQUESTS-LIST][SERVED] storedRequestId',  this.storedRequestId)
+        }
+      );
+    }, 100);
+  }
+
+  
+
+  onMouseEnter() {
+    console.log('[WS-REQUESTS-UNSERVED] onMouseEnter')
+    this.hasHover = true
+   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.logger.log('[WS-REQUEST-UNSERVED] from @Input »»» WebSocketJs WF - wsRequestsUnserved', this.wsRequestsUnserved)
@@ -165,26 +185,26 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
       // this.logger.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes.ws_requests_length.previousValue ', changes.ws_requests_length.previousValue)
       this.logger.log('[WS-REQUEST-UNSERVED] ngOnChanges here 1', changes)
 
-      if (this.wsRequestsUnserved.length > 0) {
-        this.logger.log('[WS-REQUEST-UNSERVED] ngOnChanges here 2', changes)
-        setTimeout(() => {
-          scrollToWithAnimation(
-            this.scrollEl, // element to scroll
-            'scrollTop', // direction to scroll
-            +this.scrollYposition, // target scrollY (0 means top of the page)
-            500, // duration in ms
-            'easeInOutCirc',
-            // Can be a name of the list of 'Possible easing equations' or a callback
-            // that defines the ease. # http://gizma.com/easing/
+        // if (this.wsRequestsUnserved.length > 0 && this.hasHover === false) {
+        // console.log('[WS-REQUEST-UNSERVED] ngOnChanges here 2', changes)
+        // setTimeout(() => {
+        //   scrollToWithAnimation(
+        //     this.scrollEl, // element to scroll
+        //     'scrollTop', // direction to scroll
+        //     +this.scrollYposition, // target scrollY (0 means top of the page)
+        //     500, // duration in ms
+        //     'easeInOutCirc',
+        //     // Can be a name of the list of 'Possible easing equations' or a callback
+        //     // that defines the ease. # http://gizma.com/easing/
 
-            () => { // callback function that runs after the animation (optional)
-              this.logger.log('done!')
-              this.storedRequestId = this.usersLocalDbService.getFromStorage('last-selection-id')
-            }
-          );
-        }, 100);
+        //     () => { // callback function that runs after the animation (optional)
+        //       this.logger.log('done!')
+        //       this.storedRequestId = this.usersLocalDbService.getFromStorage('last-selection-id')
+        //     }
+        //   );
+        // }, 100);
 
-      }
+        // }
     }
 
   }
@@ -595,11 +615,19 @@ export class WsRequestsUnservedComponent extends WsSharedComponent implements On
   }
 
   goToRequestMsgs(request_id: string) {
-    this.logger.log('[WS-REQUESTS-LIST][UNSERVED] GO TO REQUEST MSGS scrollEl scrollTop', this.scrollEl.scrollTop)
+    this.logger.log('[WS-REQUESTS-UNSERVED] GO TO REQUEST MSGS scrollEl scrollTop', this.scrollEl.scrollTop)
     // this.router.navigate(['project/' + this.projectId + '/wsrequest/' + request_id + '/messages']);
     this.router.navigate(['project/' + this.projectId + '/wsrequest/' + request_id + '/1' + '/messages/' + this.scrollEl.scrollTop]);
     this.usersLocalDbService.setInStorage('last-selection-id', request_id)
+    this.hasHover = false
   }
+ 
+
+  //  @HostListener('window:scroll', ['$event']) // for window scroll events
+  //   onScroll(event) {
+  //   console.log('[WS-REQUESTS-UNSERVED] onScroll event ', event)
+  // }
+
 
 
   archiveRequest(request_id: string, request: any) {

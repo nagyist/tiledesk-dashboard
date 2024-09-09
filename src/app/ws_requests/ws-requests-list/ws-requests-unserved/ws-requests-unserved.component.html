@@ -124,7 +124,8 @@
         <!-- ------------------------- -->
         <!-- UNSERVED FOR -->
         <!-- ------------------------- -->
-        <tr *ngFor="let request of wsRequestsUnserved; trackBy: trackByFn; let i= index" [ngClass]="{'active-row': request?.request_id === storedRequestId }">
+        <!-- (scroll)="onScroll($event)" -->
+        <tr *ngFor="let request of wsRequestsUnserved; trackBy: trackByFn; let i= index"  (mouseenter)="onMouseEnter()" [ngClass]="{'active-row': request?.request_id === storedRequestId }">
 
           <!-- ------------------------------------------------------------------------------------------------------ -->
           <!-- Checkbox -->

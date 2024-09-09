@@ -30,6 +30,7 @@ import { LoggerService } from '../../services/logger/logger.service';
 import { GroupService } from '../../services/group.service';
 import { Group } from 'app/models/group-model';
 import { debounceTime } from 'rxjs/operators';
+import { ScrollService } from 'app/services/scroll.service';
 
 const swal = require('sweetalert');
 const Swal = require('sweetalert2')
@@ -230,7 +231,8 @@ export class WsRequestsListComponent extends WsSharedComponent implements OnInit
     private projectService: ProjectService,
     private prjctPlanService: ProjectPlanService,
     public logger: LoggerService,
-    public groupService: GroupService
+    public groupService: GroupService,
+    private scrollService: ScrollService
   ) {
     super(botLocalDbService, usersLocalDbService, router, wsRequestsService, faqKbService, usersService, notify, logger, translate);
     this.zone = new NgZone({ enableLongStackTrace: false });
@@ -256,11 +258,32 @@ export class WsRequestsListComponent extends WsSharedComponent implements OnInit
     this.getTestSiteUrl();
     this.translateString()
     this.getRestRequestConversationCount()
-    this.getWsConv$()
+    this.getWsConv$();
+
     // this.listenToParentPostMessage()
     // this.getGroupsByProjectId();
+
+    // this.restoreScrollPosition()
+    // this.listenToScollPosition()
+
   }
-  
+
+  // restoreScrollPosition() {
+  //   // Restore scroll position when component initializes
+  //   setTimeout(() => {
+  //     window.scrollTo(0, this.scrollService.getScrollPosition());
+  //   }, 0);
+  // }
+
+  // listenToScollPosition() {
+  //   window.addEventListener('scroll', this.onWindowScroll, true);
+  // }
+
+  // onWindowScroll = (event: any) => {
+  //   console.log("[WS-REQUESTS-LIST] onWindowScroll event ", event);
+  //   console.log("[WS-REQUESTS-LIST] onWindowScroll window.scrollY ", window.scrollY);
+  // }
+
 
 
 
@@ -1783,7 +1806,7 @@ export class WsRequestsListComponent extends WsSharedComponent implements OnInit
         //  Sort requests
         // ----------------------------------------- 
         if (this.ws_requests) {
-  
+
           // console.log('[WS-REQUESTS-LIST] - getWsRequests - sort requests  * ws_requests *', this.ws_requests);
           this.wsRequestsUnserved = this.ws_requests
             .filter(r => {
@@ -1826,12 +1849,12 @@ export class WsRequestsListComponent extends WsSharedComponent implements OnInit
         }
         this.logger.log('[WS-REQUESTS-LIST] getWsRequests - served ', this.wsRequestsServed);
         this.logger.log('[WS-REQUESTS-LIST] - getWsRequests - unserved ', this.wsRequestsUnserved);
-      
+
 
         // const sum = this.wsRequestsServed.length + this.wsRequestsUnserved.length
 
         // this.countRequestsServedByBotRr + 
-        const sum = this.countRequestsServedByHumanRr +  this.countRequestsUnservedRr
+        const sum = this.countRequestsServedByHumanRr + this.countRequestsUnservedRr
         this.served_unserved_sum = sum;
         // this.logger.log('[WS-REQUESTS-LIST] getWsRequests sum SERVED + UNSERVED', this.served_unserved_sum);
 
@@ -1876,7 +1899,7 @@ export class WsRequestsListComponent extends WsSharedComponent implements OnInit
       .subscribe((wsConv) => {
         // console.log("[WS-REQUESTS-LIST] - ** wsConv ",  wsConv);
         this.getRestRequestConversationCount()
-      
+
         // console.log("[WS-REQUESTS-LIST] - ** wsConv ",  wsConv);
         //   if (wsConv['status'] === 100) {
         //     console.log('[WS-REQUESTS-MSGS] - countRequestsUnservedRestCall - Rest Request + RT ', this.countRequestsUnservedRr + 1);
@@ -1887,38 +1910,38 @@ export class WsRequestsListComponent extends WsSharedComponent implements OnInit
         //   if (wsConv['status'] !== 100 && wsConv['hasBot'] === true) {
         //     console.log('[WS-REQUESTS-MSGS] - countRequestsServedByBot - Rest Request + RT ', this.countRequestsServedByBotRr + 1);
         //   }
-        
+
       })
 
-    }
+  }
 
 
-    getRestRequestConversationCount() {
-      this.wsRequestsService.getConversationCount()
-        .subscribe((requests: any) => {
+  getRestRequestConversationCount() {
+    this.wsRequestsService.getConversationCount()
+      .subscribe((requests: any) => {
         // console.log('[WS-REQUESTS-MSGS] - ************* getRestRequestConversationCount - requests  ', requests);
-          if (requests) {
-            this.requestCountResp = requests
-            this.countRequestsServedByHumanRr = requests.assigned;
-            this.countRequestsServedByBotRr = requests.bot_assigned;
-            this.countRequestsUnservedRr= requests.unassigned;
-  
-            // console.log('[WS-REQUESTS-MSGS] - countRequestsServedByHumanRestCall ', this.countRequestsServedByHumanRr);
-            // console.log('[WS-REQUESTS-MSGS] - countRequestsServedByBotRestCall ', this.countRequestsServedByBotRr);
-            // console.log('[WS-REQUESTS-MSGS] - countRequestsUnservedRestCall ', this.countRequestsUnservedRr);
-          }
-  
-        }, (error) => {
-      
-          this.logger.error('[WS-REQUESTS-MSGS] - getRestRequestConversationCount - ERROR  ', error);
-         
-        }, () => {
-        
-          this.logger.log('[WS-REQUESTS-MSGS] -getRestRequestConversationCount * COMPLETE *');
-        });
-    }
+        if (requests) {
+          this.requestCountResp = requests
+          this.countRequestsServedByHumanRr = requests.assigned;
+          this.countRequestsServedByBotRr = requests.bot_assigned;
+          this.countRequestsUnservedRr = requests.unassigned;
 
-  
+          // console.log('[WS-REQUESTS-MSGS] - countRequestsServedByHumanRestCall ', this.countRequestsServedByHumanRr);
+          // console.log('[WS-REQUESTS-MSGS] - countRequestsServedByBotRestCall ', this.countRequestsServedByBotRr);
+          // console.log('[WS-REQUESTS-MSGS] - countRequestsUnservedRestCall ', this.countRequestsUnservedRr);
+        }
+
+      }, (error) => {
+
+        this.logger.error('[WS-REQUESTS-MSGS] - getRestRequestConversationCount - ERROR  ', error);
+
+      }, () => {
+
+        this.logger.log('[WS-REQUESTS-MSGS] -getRestRequestConversationCount * COMPLETE *');
+      });
+  }
+
+
   // getWsRequest$() {
   //   this.logger.log("[WS-REQUESTS-LIST] - enter NOW in getWsRequest$");
   //   this.wsRequestsService.wsRequestList$

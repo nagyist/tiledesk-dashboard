@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, OnDestroy, ViewChild, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, OnDestroy, ViewChild, SimpleChanges, HostListener, AfterViewInit } from '@angular/core';
 import { WsSharedComponent } from '../../ws-shared/ws-shared.component';
 import { BotLocalDbService } from '../../../services/bot-local-db.service';
 import { AuthService } from '../../../core/auth.service';
@@ -32,7 +32,7 @@ import scrollToWithAnimation from 'scrollto-with-animation'
   styleUrls: ['./ws-requests-served.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WsRequestsServedComponent extends WsSharedComponent implements OnInit, OnChanges, OnDestroy {
+export class WsRequestsServedComponent extends WsSharedComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
 
   @Input() wsRequestsServed: Request[];
   @Input() ws_requests_length: number;
@@ -91,6 +91,7 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
   scrollYposition: any;
   storedRequestId: string
   CHANNELS_NAME = CHANNELS_NAME;
+  hasHover:boolean = false
   
   /**
    * Constructor
@@ -132,6 +133,24 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
     this.botLogo = brand['BASE_LOGO_NO_TEXT']
   }
 
+  getRouteParams() {
+    this.scrollEl = <HTMLElement>document.querySelector('.main-panel');
+    this.logger.log('[WS-REQUESTS-SERVED] oninit scrollEl', this.scrollEl)
+    this.route.params.subscribe((params) => {
+      // this.projectId = params.projectid
+      this.logger.log('[WS-REQUESTS-SERVED] - GET ROUTE PARAMS ', params);
+      if (params.scrollposition) {
+        this.scrollYposition = params.scrollposition;
+        this.logger.log('[WS-REQUESTS-SERVED] - scrollYposition', +this.scrollYposition);
+        if (this.scrollEl) {
+          this.logger.log('[WS-REQUESTS-SERVED] scrollEl scrollTop', this.scrollEl.scrollTop)
+        } else {
+          this.logger.error('[WS-REQUESTS-LIST][SERVED] scrollEl', this.scrollEl)
+        }
+      }
+    })
+  }
+
   // -------------------------------------------------------------
   // @ Lifehooks
   // -------------------------------------------------------------
@@ -147,6 +166,8 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
     this.getFirebaseAuth();
     this.getRouteParams()
 
+    
+
     // this.router.events.subscribe((event) => { 
     //   if (event instanceof NavigationEnd || event instanceof NavigationStart) {    
     //     this.logger.log('[WS-REQUESTS-LIST][SERVED] event', event)
@@ -154,6 +175,29 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
     // })
 
   }
+
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      scrollToWithAnimation(
+        this.scrollEl, // element to scroll
+        'scrollTop', // direction to scroll
+        +this.scrollYposition, // target scrollY (0 means top of the page)
+        500, // duration in ms
+        'easeInOutCirc', 
+        // Can be a name of the list of 'Possible easing equations' or a callback
+        // that defines the ease. # http://gizma.com/easing/
+   
+        () => { // callback function that runs after the animation (optional)
+          this.logger.log('done!')
+          this.storedRequestId = this.usersLocalDbService.getFromStorage('last-selection-id')
+          this.logger.log('[WS-REQUESTS-LIST][SERVED] storedRequestId',  this.storedRequestId)
+        }
+      );
+    }, 100);
+  }
+
+ 
 
   onContextMenu(event: MouseEvent, item) {
     event.preventDefault();
@@ -174,42 +218,12 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
 
 
 
-  getRouteParams() {
-    this.scrollEl = <HTMLElement>document.querySelector('.main-panel');
-    this.logger.log('[WS-REQUESTS-LIST][SERVED] oninit scrollEl', this.scrollEl)
-    this.route.params.subscribe((params) => {
-      // this.projectId = params.projectid
-      this.logger.log('[WS-REQUESTS-LIST][SERVED] - GET ROUTE PARAMS ', params);
-      if (params.scrollposition) {
-        this.scrollYposition = params.scrollposition;
-        this.logger.log('[WS-REQUESTS-LIST][SERVED] - scrollYposition', +this.scrollYposition);
-        if (this.scrollEl) {
-          this.logger.log('[WS-REQUESTS-LIST][SERVED] scrollEl scrollTop', this.scrollEl.scrollTop)
-          // setTimeout(() => {
-          // this.scrollEl.scrollTo(0, +this.scrollYposition);
 
-          // scrollToWithAnimation(
-          //   this.scrollEl, // element to scroll
-          //   'scrollTop', // direction to scroll
-          //   +this.scrollYposition, // target scrollY (0 means top of the page)
-          //   10000, // duration in ms
-          //   'easeInOutCirc', /*
-          //       Can be a name of the list of 'Possible easing equations' or a callback
-          //       that defines the ease. # http://gizma.com/easing/
-          //   */
-          //   function () { // callback function that runs after the animation (optional)
-          //     this.logger.log('done!')
-          //   }
-          // );
-          // this.scrollEl.scrollTo({top: +this.scrollYposition, behavior: 'smooth'});
-          // }, 100);
-        } else {
-          this.logger.error('[WS-REQUESTS-LIST][SERVED] scrollEl', this.scrollEl)
-        }
-      }
-    })
 
-  }
+  onMouseEnter() {
+    this.hasHover = true
+    console.log('[WS-REQUESTS-SERVED] onMouseEnter')
+   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.logger.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes', changes)
@@ -235,26 +249,26 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
       // this.logger.log('[WS-REQUESTS-LIST][SERVED] ngOnChanges changes.ws_requests_length.previousValue ', changes.ws_requests_length.previousValue)
 
 
-      if (this.wsRequestsServed.length > 0) {
-        setTimeout(() => {
-          scrollToWithAnimation(
-            this.scrollEl, // element to scroll
-            'scrollTop', // direction to scroll
-            +this.scrollYposition, // target scrollY (0 means top of the page)
-            500, // duration in ms
-            'easeInOutCirc', 
-            // Can be a name of the list of 'Possible easing equations' or a callback
-            // that defines the ease. # http://gizma.com/easing/
+      // if (this.wsRequestsServed.length > 0 && this.hasHover === false) {
+      //   // console.log('[WS-REQUEST-SERVED] ngOnChanges here 2', changes)
+      //   setTimeout(() => {
+      //     scrollToWithAnimation(
+      //       this.scrollEl, // element to scroll
+      //       'scrollTop', // direction to scroll
+      //       +this.scrollYposition, // target scrollY (0 means top of the page)
+      //       500, // duration in ms
+      //       'easeInOutCirc', 
+      //       // Can be a name of the list of 'Possible easing equations' or a callback
+      //       // that defines the ease. # http://gizma.com/easing/
        
-            () => { // callback function that runs after the animation (optional)
-              this.logger.log('done!')
-              this.storedRequestId = this.usersLocalDbService.getFromStorage('last-selection-id')
-              this.logger.log('[WS-REQUESTS-LIST][SERVED] storedRequestId',  this.storedRequestId)
-            }
-          );
-        }, 100);
-
-      }
+      //       () => { // callback function that runs after the animation (optional)
+      //         this.logger.log('done!')
+      //         this.storedRequestId = this.usersLocalDbService.getFromStorage('last-selection-id')
+      //         this.logger.log('[WS-REQUESTS-LIST][SERVED] storedRequestId',  this.storedRequestId)
+      //       }
+      //     );
+      //   }, 100);
+      // }
     }
   }
 
@@ -549,11 +563,7 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
   //   }
   // }
 
-  goToServedNTR() {
-    this.router.navigate(['project/' + this.projectId + '/all-conversations'],{ queryParams: { leftfilter: 200 } });
-  }
-
-
+ 
   goToBotProfile(bot, bot_id: string, bot_type: string) {
 
     this.logger.log('[WS-REQUESTS-LIST][SERVED] goToBotProfile bot', bot)
@@ -629,12 +639,23 @@ export class WsRequestsServedComponent extends WsSharedComponent implements OnIn
   }
 
 
+  goToServedNTR() {
+    this.router.navigate(['project/' + this.projectId + '/all-conversations'],{ queryParams: { leftfilter: 200 } });
+  }
+
+
   goToRequestMsgs(request_id: string) {
-    this.logger.log('[WS-REQUESTS-LIST][SERVED] GO TO REQUEST MSGS scrollEl scrollTop', this.scrollEl.scrollTop)
-    this.logger.log("[WS-REQUESTS-LIST][SERVED] GO TO REQUEST MSGS ")
+    this.logger.log('[WS-REQUESTS-SERVED] GO TO REQUEST MSGS scrollEl scrollTop', this.scrollEl.scrollTop)
+    this.logger.log("[WS-REQUESTS-SERVED] GO TO REQUEST MSGS ")
     this.router.navigate(['project/' + this.projectId + '/wsrequest/' + request_id + '/1' + '/messages/' + this.scrollEl.scrollTop]);
     this.usersLocalDbService.setInStorage('last-selection-id', request_id)
+    this.hasHover = false
   }
+
+
+
+
+
 
   // goToWsRequestsNoRealtimeServed() {
   //   this.logger.log("[WS-REQUESTS-LIST][SERVED] GO TO REQUEST MSGS ")
