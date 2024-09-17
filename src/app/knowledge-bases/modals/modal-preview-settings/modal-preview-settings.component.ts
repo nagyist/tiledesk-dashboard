@@ -152,7 +152,10 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges {
     // }
     
     this.selectedModel = this.model_list.find(el => el.value === this.selectedNamespace.preview_settings.model).value
-    this.logger.log("[MODAL PREVIEW SETTINGS] selectedModel ", this.selectedModel)
+    console.log("[MODAL PREVIEW SETTINGS] selectedModel ", this.selectedModel)
+    if (this.selectedModel === 'o1-preview') { 
+      this.temperature = 1
+    }
 
     // if(this.selectedModel !== this.selectedNamespaceClone.preview_settings.model) {
     //   this.countOfOverrides =  this.countOfOverrides + 1;
