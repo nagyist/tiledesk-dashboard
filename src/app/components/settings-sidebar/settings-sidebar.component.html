@@ -289,6 +289,43 @@
       </li>
     </ng-container>
 
+      <!-- ----------------------------- -->
+      <!-- APPS  -->
+      <!-- ----------------------------- -->
+      <!-- <ng-container *ngIf="isVisibleAPP && USER_ROLE !== 'agent'">
+        <li id="apps" *ngIf="project" routerLinkActive="active" 
+          matTooltipClass="custom-mat-tooltip-in-settings-sidebar"
+          matTooltip="{{ 'Apps' | translate }}" 
+          #tooltip="matTooltip" 
+          matTooltipPosition='right'
+          matTooltipHideDelay="100" 
+          style="height: 50px !important;">
+          <a class="customAncor" routerLink="project/{{ project._id }}/app-store">
+            <i class="material-icons sidebar-icons">dashboard_customize</i>
+          </a>
+        </li>
+      </ng-container> -->
+
+      <ng-container *ngIf="isVisibleAPP && USER_ROLE !== 'agent'">
+        <li [ngClass]="{'active-item': APPS_ROUTE_IS_ACTIVE}" 
+          (click)="goToApps()"
+          matTooltipClass="custom-mat-tooltip-in-settings-sidebar" 
+          matTooltip="{{ 'Apps' | translate }}"
+          #tooltip="matTooltip" 
+          matTooltipPosition='right' 
+          matTooltipHideDelay="100" 
+          [matTooltipDisabled]="IS_OPEN">
+          <a  class="settings-sidebar-anchor">
+            <i *ngIf="IS_OPEN === true || IS_OPEN === false" class="material-icons settings-sidebar-icons">
+              dashboard_customize
+            </i>
+            <p *ngIf="IS_OPEN === true" class="custom_paragraph">
+              {{ 'Apps' | translate }}
+            </p>
+          </a>
+        </li>
+      </ng-container>
+
 
     <!-- -------------------------------------------------------- -->
     <!--  Project Settings  -->

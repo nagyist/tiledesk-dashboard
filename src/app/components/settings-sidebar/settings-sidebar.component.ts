@@ -37,6 +37,7 @@ export class SettingsSidebarComponent implements OnInit {
   isVisibleKNB: boolean;
   isVisibleAUT: boolean;
   isVisibleINT: boolean;
+  
   TAG_ROUTE_IS_ACTIVE: boolean;
   EMAIL_TICKETING_ROUTE_IS_ACTIVE: boolean;
   CANNED_RESPONSES_ROUTE_IS_ACTIVE: boolean;
@@ -56,6 +57,7 @@ export class SettingsSidebarComponent implements OnInit {
   KNOWLEDGE_BASES_ROUTE_IS_ACTIVE: boolean;
   AUTOMATIONS_ROUTE_IS_ACTIVE: boolean;
   INTEGRATIONS_ROUTE_IS_ACTIVE: boolean;
+  APPS_ROUTE_IS_ACTIVE: boolean;
   TRANSLATIONS_ROUTE_IS_ACTIVE: boolean;
   public_Key: string;
   USER_ROLE: any;
@@ -465,6 +467,10 @@ export class SettingsSidebarComponent implements OnInit {
     this.router.navigate(['project/' + this.project._id + '/integrations'])
   }
 
+  goToApps() {
+    this.router.navigate(['project/' + this.project._id + '/app-store'])
+  }
+
   goToKnowledgeBases() {
     this.logger.log("goToKnowledgeBases -----> project._id: ", this.project._id);
     this.router.navigate(['project/' + this.project._id + '/knowledge-bases-pre'])
@@ -658,6 +664,16 @@ export class SettingsSidebarComponent implements OnInit {
       this.INTEGRATIONS_ROUTE_IS_ACTIVE = false
       this.logger.log('[SETTING-SIDEBAR] - INTEGRATIONS_ROUTE_IS_ACTIVE  ', this.INTEGRATIONS_ROUTE_IS_ACTIVE)
     }
+
+    if (this.route.indexOf('/app-store') !== -1) {
+      this.APPS_ROUTE_IS_ACTIVE = true
+      this.logger.log('[SETTING-SIDEBAR] - APPS_ROUTE_IS_ACTIVE  ', this.APPS_ROUTE_IS_ACTIVE)
+    } else {
+      this.APPS_ROUTE_IS_ACTIVE = false
+      this.logger.log('[SETTING-SIDEBAR] - APPS_ROUTE_IS_ACTIVE  ', this.APPS_ROUTE_IS_ACTIVE)
+    }
+
+    
 
     if (this.route.indexOf('/widget/translations') !== -1) {
       this.TRANSLATIONS_ROUTE_IS_ACTIVE = true
