@@ -1500,11 +1500,16 @@ li:hover>a>.realtime-icon-wpr>svg>path {
 // }
 
 
-.tiledesk-logo {
+.bottom-items {
   position: relative;
   margin-top: auto;
   z-index: 4;
-  margin-bottom: 18px;
+  // margin-bottom: 18px;
+}
+
+.last-sidebar-menu-item {
+ height: 60px !important;
+ margin-bottom: 15px;
 }
 
 

@@ -206,7 +206,7 @@
       <!-- CONTACTS (LEADS)  -->
       <!-- ----------------------------- -->
       <ng-container *ngIf="isVisibleCNT">
-        <li id="contacts" *ngIf="project" routerLinkActive="active" 
+        <li class="bottom-items" id="contacts" *ngIf="project" routerLinkActive="active" 
           matTooltipClass="sb-mat-tooltip"
           matTooltip="{{ 'Contacts' | translate }}" 
           #tooltip="matTooltip" 
@@ -332,7 +332,8 @@
       </li>
       <!-- ----------------------------- -->
       <!-- @ Support   matTooltip="{{companyName}}" -->
-      <li class="tiledesk-logo" [ngClass]="{'active': SUPPORT_ROUTE_IS_ACTIVE}"
+      <!-- class="tiledesk-logo" -->
+      <li class="last-sidebar-menu-item" [ngClass]="{'active': SUPPORT_ROUTE_IS_ACTIVE}"
         id="support"
         matTooltipClass="sb-mat-tooltip" 
        
@@ -340,7 +341,6 @@
         #tooltip="matTooltip"
         matTooltipPosition='right' 
         matTooltipHideDelay="100"
-        style="height: 60px !important;"
         routerLinkActive="active" 
         (click)="stopScroll()">
 

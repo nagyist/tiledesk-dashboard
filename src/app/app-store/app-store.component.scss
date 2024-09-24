@@ -135,7 +135,7 @@
     background-color: #2d323e !important;
     font-size: 12px !important;
     border-radius: 2px !important;
-    font-family: "Poppins", "Roboto", "Arial", sans-serif !important;
+    font-family: var(--header-font-family) !important;
     padding-top: 8px !important;
     padding-bottom: 8px !important;
     color: #fff !important;
@@ -185,7 +185,7 @@
     letter-spacing: -0.01em;
     border-bottom: 1px solid rgb(239, 242, 246);
     color: #080f1a;
-    font-family: "Poppins", "Roboto", "Arial", sans-serif;
+    font-family: var(--header-font-family);
 }
 
 .hide-paid-app {
@@ -200,7 +200,8 @@
     top: 60px;
     padding: 15px;
     font-size: 16px;
-    font-family: "Poppins", "Roboto", "Arial", sans-serif
+    font-family: var(--header-font-family);
+    width: calc(100% - 286px);
 }
 
 .app-alert>div>.link-to-integrations { 

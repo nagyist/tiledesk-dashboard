@@ -1,8 +1,8 @@
 <!-- margin-top:6px; -->
-<p style="z-index: 1050;position: relative; padding-left:30px" class="navbar-brand"
+<!-- <p style="z-index: 1050;position: relative; padding-left:30px" class="navbar-brand"
   [ngStyle]="{'margin-top':isChromeVerGreaterThan100 === true ? '-64px' : '6px' }">
   App Store
-</p>
+</p> -->
 
 
 <span class="navbar-brand navbar-brand-sidebar-settings"
@@ -37,18 +37,23 @@
 
       <appdashboard-settings-sidebar></appdashboard-settings-sidebar>
 
-      <div class="row app-alert" *ngIf="areActivePay">
-        <div class="col-md-12">
     
-          Are you looking for the <span class="link-to-integrations" (click)="goToWhatsapp()"> Whatsapp</span> , <span
-            class="link-to-integrations" (click)="goToMessenger()"> Facebook Messenger</span> or <span
-            class="link-to-integrations" (click)="goToTelegram()">Telegram</span> app? Check out the new <span
-            class="link-to-integrations" (click)="goToIntegrations()">Integrations</span> section
-        </div>
-    
-      </div>
 
-      <div class="apps-content" style="flex: 1 1 auto; margin: 0 20px;">
+      <div class="apps-content" style="flex: 1 1 auto; margin: 50px 20px 0px 29px;">
+
+        <!-- row -->
+        <div class=" app-alert" *ngIf="areActivePay">
+          <!-- class="col-md-12" -->
+          <div >
+      
+            Are you looking for the <span class="link-to-integrations" (click)="goToWhatsapp()"> Whatsapp</span> , <span
+              class="link-to-integrations" (click)="goToMessenger()"> Facebook Messenger</span> or <span
+              class="link-to-integrations" (click)="goToTelegram()">Telegram</span> app? Check out the new <span
+              class="link-to-integrations" (click)="goToIntegrations()">Integrations</span> section
+          </div>
+      
+        </div>
+        
         <!-- <div class="row">
           <div class="col-xs-12">
             <button class="btn btn-primary" style="padding: 8px 16px; margin: 0px;" (click)="goToCreateApp()">
