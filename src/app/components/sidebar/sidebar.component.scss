@@ -17,7 +17,8 @@
   transition-property: top, bottom, width;
   transition-duration: 0.2s, 0.2s, 0.35s;
   transition-timing-function: linear, linear, ease;
-  background-color: $brand-sidebar-bckgrnd-bottom-section !important;
+  background-color: var(--sb-background-color) !important ; //$brand-sidebar-bckgrnd-bottom-section !important;
+  border-right: var(--sb-border-right) !important;
 }
 
 // li.active a span.sidebar-mini {
@@ -374,7 +375,9 @@ button.close {
 }
 
 .logo {
-  background-color: #2d323e !important;
+  // background-color: #2d323e !important; // old
+  background-color: var(--sb-background-color) !important ; //$brand-sidebar-bckgrnd-bottom-section !important;
+  border-right: var(--sb-border-right) !important;
   padding-bottom: 5px;
   min-height: 60px;
   width: 60px; // for SMALL SIDEBAR
@@ -1509,7 +1512,7 @@ li:hover>a>.realtime-icon-wpr>svg>path {
 
 .last-sidebar-menu-item {
  height: 60px !important;
- margin-bottom: 15px;
+//  margin-bottom: 15px;
 }
 
 
