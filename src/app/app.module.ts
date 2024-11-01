@@ -398,6 +398,9 @@ import { MessagesStatsModalComponent } from './components/modals/messages-stats-
 import { WsChatbotService } from './services/websocket/ws-chatbot.service';
 import { AnalyticsService } from './services/analytics.service';
 // import { N8nIntegrationComponent } from './integrations/list/n8n-integration/n8n-integration.component'; // now lazy
+// import { N8nIntegrationComponent } from './integrations/list/n8n-integration/n8n-integration.component';
+
+
 import { KnowledgeBasesAlertComponent } from './knowledge-bases/knowledge-bases-alert/knowledge-bases-alert.component';
 import { LogRequestsInterceptor } from './services/interceptor/log-requests.interceptor';
 import { CnpSelectTemplatesOrKbComponent } from './create-new-project/cnp-select-templates-or-kb/cnp-select-templates-or-kb.component';
@@ -713,7 +716,6 @@ const appInitializerFn = (appConfig: AppConfigService, brandService: BrandServic
     // AddContentMenuComponent, // now lazy
     UserModalComponent,
     MessagesStatsModalComponent,
-    // N8nIntegrationComponent,
     KnowledgeBasesAlertComponent,
     CnpSelectTemplatesOrKbComponent,
     // ModalChatbotReassignmentComponent,
