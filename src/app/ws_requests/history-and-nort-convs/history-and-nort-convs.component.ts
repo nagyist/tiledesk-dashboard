@@ -1205,11 +1205,13 @@ export class HistoryAndNortConvsComponent extends WsSharedComponent implements O
       this.operator = '='
       this.requests_status_selected_from_advanced_option = '200'
       this.requests_status = '200'
-    } else if (request_status === '50') {
-      this.operator = '='
-      this.requests_status_selected_from_advanced_option = '50'
-      this.requests_status = '50'
-    }
+    } 
+    
+    // else if (request_status === '50') {
+    //   this.operator = '='
+    //   this.requests_status_selected_from_advanced_option = '50'
+    //   this.requests_status = '50'
+    // }
 
   }
 
@@ -1219,7 +1221,8 @@ export class HistoryAndNortConvsComponent extends WsSharedComponent implements O
     if (this.requests_statuses.length === 0) {
       this.logger.log('[HISTORY & NORT-CONVS] - requestsStatusesSelectFromAdvancedOption requests_statuses 2', this.requests_statuses);
       // this.requests_statuses = ['1000', '100', '200', '50']
-      this.requests_status = "1000,100,200,50"
+      // this.requests_status = "1000,100,200,50"
+      this.requests_status = "1000,100,200"
       this.getRequests()
     }
     this.requests_status = requests_statuses.join()
@@ -2645,7 +2648,7 @@ export class HistoryAndNortConvsComponent extends WsSharedComponent implements O
       + 'requester_email=' + '&'
       + 'tags=' + '&'
       + 'channel=';
-    + 'rstatus=' + '&'
+      + 'rstatus=' + '&'
       + 'duration_op=' + '&'
       + 'duration=' + '&'
       + 'called=' + '&'
