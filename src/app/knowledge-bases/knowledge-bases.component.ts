@@ -43,6 +43,8 @@ import { getSteps as defaultSteps, defaultStepOptions } from './knowledge-bases.
 
 import Step from 'shepherd.js/src/types/step';
 import { ModalFaqsComponent } from './modals/modal-faqs/modal-faqs.component';
+import { ModalAddContentComponent } from './modals/modal-add-content/modal-add-content.component';
+import { ProjectUser } from 'app/models/project-user';
 // import {
 //   // provideHighlightOptions,
 //   Highlight,
@@ -992,7 +994,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
     Swal.fire({
       // title: this.translate.instant('Success'),
       // text: this.translate.instant('ChatbotSuccessfullyCreated'),
-      title: this.translate.instant('ChatbotSuccessfullyCreated'),
+      title: this.translate.instant('AIAgentSuccessfullyCreated'),
       text: this.translate.instant('NowItIsTimeToAddContent') + ' !',
       icon: "success",
       showCloseButton: false,
@@ -1366,6 +1368,23 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
   }
 
 
+
+  onOpenAddContent(){
+    const dialogRef = this.dialog.open(ModalAddContentComponent, {
+      backdropClass: 'cdk-overlay-transparent-backdrop',
+      hasBackdrop: true,
+      width: '900px',
+    });
+
+    dialogRef.afterClosed().subscribe(type => {
+      this.logger.log('[Modal ADD CONTENT] type: ', type);
+      if (type) {
+        this.openAddKnowledgeBaseModal(type)
+      }
+    });
+  }
+
+
   openAddKnowledgeBaseModal(type?: string) {
     this.logger.log('[KNOWLEDGE BASES COMP] openAddKnowledgeBaseModal type', type)
     this.typeKnowledgeBaseModal = type;
@@ -1437,7 +1456,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
       width: '600px',
     });
     dialogRef.afterClosed().subscribe(body => {
-      this.logger.log('[Modal Add URLS AFTER CLOSED] Dialog body: ', body);
+      console.log('[Modal Add URLS AFTER CLOSED] Dialog body: ', body);
       if (body) {
         this.onAddMultiKb(body)
       }
@@ -1454,7 +1473,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
 
     });
     dialogRef.afterClosed().subscribe(body => {
-      this.logger.log('[Modal IMPORT SITEMAP AFTER CLOSED]  body: ', body);
+      console.log('[Modal IMPORT SITEMAP AFTER CLOSED]  body: ', body);
       if (body) {
         this.onAddMultiKb(body)
       }
@@ -1481,17 +1500,12 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
   }
 
   getProjectUserRole() {
-    this.usersService.project_user_role_bs
-      .pipe(
-        takeUntil(this.unsubscribe$)
-      )
-      .subscribe((user_role) => {
-        this.logger.log('[PRJCT-EDIT-ADD] - USER ROLE ', user_role);
-        if (user_role) {
-          this.USER_ROLE = user_role
-
-        }
-      });
+    this.usersService.projectUser_bs.pipe(takeUntil(this.unsubscribe$)).subscribe((projectUser: ProjectUser) => {
+      this.logger.log('[PRJCT-EDIT-ADD] - USER ROLE ', projectUser);
+      if (projectUser) {
+        this.USER_ROLE = projectUser.role
+      }
+    });
   }
 
 
@@ -1861,7 +1875,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
       this.logger.log("[KNOWLEDGE BASES COMP] GET KB LIST *COMPLETE*");
       this.showSpinner = false;
 
-      this.presentKBTour()
+      // this.presentKBTour()
 
     })
   }
