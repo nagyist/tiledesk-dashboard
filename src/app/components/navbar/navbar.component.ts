@@ -2065,25 +2065,26 @@ export class NavbarComponent extends PricingBaseComponent implements OnInit, Aft
     this.sleekplanApi.getNewChangelogCount().subscribe(
       (resp) => {
         // this.newChangelogCount = data.count;
-        this.logger.log('[NAVBAR] changelog count resp', resp);
-        this.logger.log('[NAVBAR] changelog count  resp data ', resp['data']);
-        this.logger.log('[NAVBAR] changelog count  resp data items ', resp['data']['items']);
+        console.log('[NAVBAR] changelog count resp', resp);
+        console.log('[NAVBAR] changelog count  resp data ', resp['data']);
+        console.log('[NAVBAR] changelog count  resp data items ', resp['data']['items']);
         const data = resp['data']['items']
     
         const firstKey = Object.keys(data)[0]; // Get the first key in the object
         const createdValue = data[firstKey].created; // Access the created property
 
-        this.logger.log('[NAVBAR] last changelog createdValue ', createdValue); 
+        console.log('[NAVBAR] last changelog createdValue ', createdValue); 
         const createdValueTimestamp = new Date(createdValue).getTime();
-        this.logger.log('[NAVBAR] last changelog createdValue as Timestamp  ', createdValueTimestamp);
+        // const createdValueTimestamp = 1734077742000
+        console.log('[NAVBAR] last changelog createdValue as -> Timestamp  ', createdValueTimestamp);
 
-        this.logger.log('[NAVBAR] lastSeen ', lastSeen);
+        console.log('[NAVBAR] lastSeen ', lastSeen);
         if (lastSeen ) {
           if (createdValueTimestamp > lastSeen) {
-            this.logger.log('[NAVBAR]  there is a notification 1');
+            console.log('[NAVBAR] - there is A notification 1 createdValueTimestamp ', createdValueTimestamp, 'lastSeen ', lastSeen) ;
             this.newChangelogCount = true
           } else {
-            this.logger.log('[NAVBAR]  there is NOT notification ');
+            console.log('[NAVBAR] - there is NOT notification 1 createdValueTimestamp ', createdValueTimestamp, 'lastSeen ', lastSeen) ;
             this.newChangelogCount = false
           }
         } else {
