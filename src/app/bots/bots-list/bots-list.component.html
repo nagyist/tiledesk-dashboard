@@ -227,11 +227,18 @@
                                 (keypress)="onPressEnterUpdateChatBotName($event);$event.stopPropagation() ">
                             </div>
                           </span>
+
+                          <div class="cl-card-item-slug">
+                            {{faqkb?.slug}}
+                          </div>
+
                           <div class="cl-card-item-description-wpr">
                             <!-- <div class="bot-card-bot-no-description" *ngIf="!faqkb.description"> No description provided</div> -->
                             <div class="cl-card-item-description" *ngIf="faqkb.description"> {{ faqkb?.description }}
                             </div>
                           </div>
+
+                          
 
                           <div class="cl-card-item-info">
 

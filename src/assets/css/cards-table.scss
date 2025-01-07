@@ -187,7 +187,7 @@
 .cl-card-item-description-wpr {
   font-size: var(--cl-card-item-description-wpr-font-size);
   font-weight: var(--cl-card-item-description-wpr-font-weight);
-  margin-top: 4px;
+  // margin-top: 4px;
   display: table;
   table-layout: fixed;
   width: 90%;
@@ -201,6 +201,12 @@
   margin-left: 24px;
 }
 
+.cl-card-item-slug {
+  color: #647491;
+  font-weight: 400;
+  font-style: italic;
+}
+
 .cl-card-item-info {
   font-size: var(--cl-card-item-info-font-size);
   color: var(--secondary-text-color);
@@ -210,6 +216,8 @@
   font-weight: var(--cl-card-item-info-font-weight);
   // margin-bottom: 4px;
 }
+
+
 
 .cl-card-second-column {
   display: flex;

@@ -592,7 +592,7 @@ export class BotListComponent extends PricingBaseComponent implements OnInit, On
     this.showSpinner = true
     // this.faqKbService.getAllBotByProjectId().subscribe((faqKb: any) => {
     this.faqKbService.getFaqKbByProjectId().subscribe((faqKb: any) => {
-      this.logger.log('[BOTS-LIST] - GET BOTS BY PROJECT ID', faqKb);
+      console.log('[BOTS-LIST] - GET BOTS BY PROJECT ID', faqKb);
       if (faqKb) {
 
         this.faqkbList = faqKb;
@@ -600,7 +600,7 @@ export class BotListComponent extends PricingBaseComponent implements OnInit, On
         this.myChatbotOtherCount = faqKb.length
 
         if (this.orderBylastUpdated) {
-          this.logger.log('[BOTS-LIST] - orderBylastUpdated Here yes');
+          console.log('[BOTS-LIST] - orderBylastUpdated Here yes');
           this.faqkbList.sort(function compare(a: Chatbot, b: Chatbot) {
             if (a['updatedAt'] > b['updatedAt']) {
               return -1;
