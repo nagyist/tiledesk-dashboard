@@ -371,7 +371,7 @@ export class AuthGuard implements CanActivate {
 
 
     const storedRoute = this.localDbService.getFromStorage('wannago')
-    // this.logger.log('[AUTH-GUARD] storedRoute getFromStorage ', storedRoute)
+    this.logger.log('[AUTH-GUARD] storedRoute getFromStorage ', storedRoute)
 
     if (decodeCurrentUrl === storedRoute) {
       this.localDbService.removeFromStorage('wannago')
