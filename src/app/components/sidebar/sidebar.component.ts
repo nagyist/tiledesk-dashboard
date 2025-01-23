@@ -1767,7 +1767,7 @@ export class SidebarComponent implements OnInit, AfterViewInit {
           this.logger.log('[SIDEBAR] getProjects projects ', projects)
           if (projects) {
             this.currentProjectUser = projects.find(prj => prj.id_project.id === this.projectId);
-            console.log('[SIDEBAR] currentProjectUser ', this.currentProjectUser)
+            this.logger.log('[SIDEBAR] currentProjectUser ', this.currentProjectUser)
 
           }
         });
