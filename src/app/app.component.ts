@@ -114,7 +114,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
         this.router.events.subscribe((event) => {
             if (event instanceof NavigationEnd) {
-                console.log('[APP-COMPONENT] - NavigationEnd event ', event)
+                console.log('[APP-COMPONENT] - - - - - - - - - NavigationEnd event - - - - - - - - - ', event)
                 gtag('config', 'G-3DMYV3HG61', { 'page_path': event.urlAfterRedirects });
 
                 if (event.urlAfterRedirects !== '/projects' && event.urlAfterRedirects !== '/login' && event.urlAfterRedirects !== '/signup') {
@@ -442,7 +442,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
     getCurrentProject(url) {
         console.log('[APP-COMPONENT] calling --- GET CURRENT PROJECT ---- - url 1', url)
         console.log('[APP-COMPONENT] calling --- GET CURRENT PROJECT ---- - this.auth.user_bs.value 1 ',this.auth.user_bs.value)
-        this.userIsSignedIn
+       
         this.auth.project_bs.subscribe((project) => {
             if (project) {
                 console.log('[APP-COMPONENT] -->> project from $ubscription 1 ', project)
@@ -460,10 +460,13 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                         // this.logger.log('[APP-COMPONENT] USER_ROLE ', this.USER_ROLE)
                     }
                 })
-            } else {
+            }             
+            else {
+                console.log('[APP-COMPONENT] calling --- GET CURRENT PROJECT ---- -  hasChangedProject ', this.auth.hasChangedProject.value)
+                console.log('[APP-COMPONENT] calling --- GET CURRENT PROJECT ---- -  project 2', project)
                 console.log('[APP-COMPONENT] calling --- GET CURRENT PROJECT ---- - url 2', url)
                 console.log('[APP-COMPONENT] calling --- GET CURRENT PROJECT ---- - this.auth.user_bs.value 2 ', this.auth.user_bs.value)
-                if (!project && this.auth.user_bs.value) {
+                if (!project && this.auth.user_bs.value && !this.auth.hasChangedProject.value) {
                     const url_segments = url.split('/');
                     const nav_project_id = url_segments[2];
                     console.log('[APP-COMPONENT] -->> project from $ubscription 2 nav_project_id', nav_project_id)
