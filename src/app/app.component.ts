@@ -515,7 +515,7 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
             this.logger.log('[APP-COMPONENT] REDIRECT TO PRICING - project.profile.type ', project.profile.type)
             this.logger.log('[APP-COMPONENT] REDIRECT TO PRICING - project.trialExpired ', project.trialExpired)
 
-            if (projectCreationDate >= freePlanLimitDate) {
+            // if (projectCreationDate >= freePlanLimitDate) {
                 this.logger.log('[APP-COMPONENT] REDIRECT TO PRICING - projectCreationDate > dateLimit ')
 
 
@@ -529,9 +529,10 @@ export class AppComponent implements OnInit, AfterViewInit, OnDestroy {
                         this.router.navigate(['project/' + project._id + '/unauthorized-to-upgrade']);
                     }
                 }
-            } else {
-                this.logger.log('[APP-COMPONENT] REDIRECT TO PRICING - projectCreationDate < dateLimit ')
-            }
+
+            // } else {
+            //     this.logger.log('[APP-COMPONENT] REDIRECT TO PRICING - projectCreationDate < dateLimit ')
+            // }
         }
     }
 
