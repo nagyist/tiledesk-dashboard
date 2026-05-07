@@ -1,6 +1,6 @@
 # tiledesk-dashboard
 
-### 2.7.208-stage 
+### 2.7.174
 - Fixed the bug: the permission to Create a Department does not work
 - Fixes bug: The name displayed in the navbar on the support page is incorrect
 
