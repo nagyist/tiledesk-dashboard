@@ -1,5 +1,9 @@
 # tiledesk-dashboard
 
+### 2.7.208-stage 
+- Fixed the bug: the permission to Create a Department does not work
+- Fixes bug: The name displayed in the navbar on the support page is incorrect
+
 ### 2.7.173
 - Migrates remaining Bootstrap 3 classes to Bootstrap 5
 - Removes permission HOME_READ
