@@ -377,6 +377,8 @@ export class SidebarUserDetailsComponent implements OnInit {
         this.logger.log('[SIDEBAR-USER-DETAILS] projectId ', this.projectId);
         this.logger.log('[SIDEBAR-USER-DETAILS] project from $ubscription', this.project);
         this.destructureProjectAndBuildProjectPlanName(this.project)
+        // Allinea avatar stato disponibilità (MPA) se la lista progetti è già stata caricata prima del project_bs
+        this.syncCurrentProjectTeammateStatusFromProjectsList();
 
         // this.findCurrentProjectAmongAll(this.projectId)
         // this.projectName = project.name;
@@ -384,17 +386,58 @@ export class SidebarUserDetailsComponent implements OnInit {
     });
   }
 
+  /**
+   * Imposta `project.teammateStatus` per il progetto corrente usando la lista `projects`
+   * (l'API espone l'id progetto come `id_project._id`, non `id_project.id`).
+   */
+  private syncCurrentProjectTeammateStatusFromProjectsList(): void {
+    if (!this.project || !this.projectId || !this.projects?.length) {
+      return;
+    }
+    const match = this.projects.find((prj: ProjectUser) => {
+      const pid = prj?.id_project?._id ?? prj?.id_project?.id;
+      return pid === this.projectId;
+    });
+    if (match?.teammateStatus) {
+      this.project.teammateStatus = match.teammateStatus;
+    }
+  }
+
+  /**
+   * MPA: icona accanto al nome progetto nel drawer (`project.teammateStatus?.avatar`).
+   * Deve seguire gli stessi dati della sidebar (WS / project user), non solo GET projects (cache).
+   */
+  private applyMpaTeammateStatusToCurrentProjectAndList(
+    statusOption: (typeof TEAMMATE_STATUS)[number]
+  ): void {
+    if (!this.isVisibleMPA || !this.project) {
+      return;
+    }
+    this.project.teammateStatus = statusOption;
+    if (!this.projects?.length || !this.projectId) {
+      return;
+    }
+    const match = this.projects.find((prj: ProjectUser) => {
+      const pid = prj?.id_project?._id ?? prj?.id_project?.id;
+      return pid === this.projectId;
+    });
+    if (match) {
+      match.teammateStatus = statusOption;
+    }
+  }
+
   getProjects() {
     this.logger.log('[SIDEBAR-USER-DETAILS] calling getProjects ... ');
     this.projectService.getProjects().subscribe((projects: ProjectUser[]) => {
-      this.logger.log('[SIDEBAR-USER-DETAILS] getProjects PROJECTS ', projects);
+      console.log('[SIDEBAR-USER-DETAILS] getProjects PROJECTS ', projects);
       if (projects) {
         this.projects = projects.filter((prj: ProjectUser) => prj?.id_project?.status === 100);
         this.projects.forEach((prj: ProjectUser) => {
           prj.teammateStatus = getUserStatusFromProjectUser(prj as any);
         });
-        this.project.teammateStatus = this.projects.find((prj: ProjectUser) => prj?.id_project?.id === this.projectId)?.teammateStatus;
-        this.logger.log('[SIDEBAR-USER-DETAILS] getProjects this.projects ', this.projects);
+        console.log('[SIDEBAR-USER-DETAILS] getProjects this.project ', this.project);
+        this.syncCurrentProjectTeammateStatusFromProjectsList();
+        console.log('[SIDEBAR-USER-DETAILS] getProjects this.project after ', this.project);
       }
     }, (error) => {
       this.logger.error('[SIDEBAR-USER-DETAILS] getProjects - ERROR ', error);
@@ -622,6 +665,7 @@ export class SidebarUserDetailsComponent implements OnInit {
           this.selectedStatus = statusOption.id;
           this.logger.log('[SIDEBAR-USER-DETAILS] - PROFILE_STATUS selected option', statusOption.name);
           this.TEAMMATE_STATUS = this.TEAMMATE_STATUS.slice(0);
+          this.applyMpaTeammateStatusToCurrentProjectAndList(statusOption);
         }
       }
       //  this.teammateStatus = this.teammateStatus.slice(0)
@@ -661,6 +705,11 @@ export class SidebarUserDetailsComponent implements OnInit {
 
           this.usersService.user_availability(projectUser[0]._id, projectUser[0].user_available, projectUser[0].isBusy, projectUser[0])
 
+        }
+
+        const statusFromMe = getUserStatusFromProjectUser(projectUser[0]);
+        if (statusFromMe) {
+          this.applyMpaTeammateStatusToCurrentProjectAndList(statusFromMe);
         }
 
         // ADDED 21 AGO
@@ -876,6 +925,7 @@ export class SidebarUserDetailsComponent implements OnInit {
             this.selectedStatus = statusOption.id;
             this.logger.log('[SIDEBAR-USER-DETAILS] - PROFILE_STATUS selected option', statusOption.name);
             this.TEAMMATE_STATUS = this.TEAMMATE_STATUS.slice(0);
+            this.applyMpaTeammateStatusToCurrentProjectAndList(statusOption);
           }
         }
       }, error => {
