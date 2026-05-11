@@ -1,4 +1,7 @@
 # tiledesk-dashboard
+ 
+### 2.7.176 (not published)
+- Implements multi-project availability
 
 ### 2.7.175
 - Adds OpenAI GPT-5.5 model
