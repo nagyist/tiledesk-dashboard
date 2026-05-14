@@ -30,7 +30,8 @@ export enum INTEGRATIONS_KEYS {
     DEEPSEEK = 'deepseek',
     OLLAMA = 'ollama',
     MCP = 'mcp',
-    VLLM = 'vllm'
+    VLLM = 'vllm',
+    ELEVENLABS = "voice_streaming"
 }
 
 //  OLLAMA = 'ollama',
@@ -118,7 +119,7 @@ export const INTEGRATION_LIST_ARRAY = [
     { name: "Cohere",                category: INTEGRATIONS_CATEGORIES.AI,               key: INTEGRATIONS_KEYS.COHERE,          src_icon: "assets/img/int/cohere_icon.svg",                 src_logo: "assets/img/int/cohere_logo.svg",             pro: true,  plan: 'Pro' },
     { name: "Ollama",                category: INTEGRATIONS_CATEGORIES.AI,               key: INTEGRATIONS_KEYS.OLLAMA,          src_icon: "assets/img/int/ollama-icon.svg",                 src_logo: "assets/img/int/ollama-logo.png",             pro: true,  plan: 'Pro' },
     { name: "MCP Servers",           category: INTEGRATIONS_CATEGORIES.MCP,              key: INTEGRATIONS_KEYS.MCP,             src_icon: "assets/img/int/mcp-icon.png",                    src_logo: "assets/img/int/mcp-logo.png",                pro: true,  plan: 'Pro' },
-    { name: "vLLM",                  category: INTEGRATIONS_CATEGORIES.AI,               key: INTEGRATIONS_KEYS.VLLM,            src_icon: "assets/img/int/vllm-icon.png",                   src_logo: "assets/img/int/vllm-logo.png",               pro: true,  plan: 'Pro' },
+    { name: "vLLM",                  category: INTEGRATIONS_CATEGORIES.AI,               key: INTEGRATIONS_KEYS.VLLM,            src_icon: "assets/img/int/vllm-icon.png",                   src_logo: "assets/img/int/vllm-logo.webp",               pro: true,  plan: 'Pro' },
     { name: "Deepseek",              category: INTEGRATIONS_CATEGORIES.AI,               key: INTEGRATIONS_KEYS.DEEPSEEK,        src_icon: "assets/img/int/deepseek-icon.svg",               src_logo: "assets/img/int/deepseek-logo.svg",           pro: true,  plan: 'Pro' },
     { name: "Qapla'",                category: INTEGRATIONS_CATEGORIES.ECOMMERCE,        key: INTEGRATIONS_KEYS.QAPLA,           src_icon: "assets/img/int/qapla-icon.jpg",                  src_logo: "assets/img/int/qapla-logo.png",              pro: true,  plan: 'Pro' },
     //{ name: "Active Campaign",     category: INTEGRATIONS_CATEGORIES.COMMUNICATION,    key: INTEGRATIONS_KEYS.ACTIVE_CAMPAIGN, src_icon: "assets/img/int/active-campaign-icon.jpeg",       src_logo: "assets/img/int/active-campaign-logo.png",    pro: true,  plan: 'Premium' },
@@ -133,7 +134,8 @@ export const INTEGRATION_LIST_ARRAY = [
     { name: "Twilio SMS",            category: INTEGRATIONS_CATEGORIES.CHANNEL,          key: INTEGRATIONS_KEYS.TWILIO_SMS,      src_icon: "assets/img/int/twilio-sms.png",                  src_logo: "assets/img/int/twilio-sms.png",              pro: true,  plan:  'Pro' },
     { name: "VXML Voice",            category: INTEGRATIONS_CATEGORIES.CHANNEL,          key: INTEGRATIONS_KEYS.VXML_VOICE,      src_icon: "assets/img/int/vxml-icon.png",                   src_logo: "assets/img/int/vxml-icon.png",               pro: true,  plan: 'Pro' },
     { name: "Twilio Voice",          category: INTEGRATIONS_CATEGORIES.CHANNEL,          key: INTEGRATIONS_KEYS.TWILIO_VOICE,    src_icon: "assets/img/int/voice-twilio-icon.png",           src_logo: "assets/img/int/voice-twilio-icon.png",       pro: true,  plan: 'Starter' },
-    { name: "WhatsApp",              category: INTEGRATIONS_CATEGORIES.CHANNEL,          key: INTEGRATIONS_KEYS.WHATSAPP,        src_icon: "assets/img/int/whatsapp-icon.png",               src_logo: "assets/img/int/whatsapp-logo.png",           pro: true,  plan: 'Pro' },
+    // AI (not CHANNEL): native component like DeepSeek; CHANNEL would trigger iframe/runURL in onIntegrationSelect
+    { name: "Elevenlabs",            category: INTEGRATIONS_CATEGORIES.AI,               key: INTEGRATIONS_KEYS.ELEVENLABS,      src_icon: "assets/img/int/elevenlabs-icon.png",             src_logo: "assets/img/int/elevenlabs-logo.png",         pro: true,  plan: 'Starter' },
     //{ name: "Zapier",              category: INTEGRATIONS_CATEGORIES.INT_PLAT,         key: INTEGRATIONS_KEYS.ZAPIER,          src_icon: "assets/img/int/zapier-icon.png",                 src_logo: "assets/img/int/zapier-logo.svg",             pro: true,  plan: 'Basic' },
     //{ name: "Zendesk",             category: INTEGRATIONS_CATEGORIES.LIVE_CHAT,        key: INTEGRATIONS_KEYS.ZENDESK,         src_icon: "assets/img/int/zendesk-icon.png",                src_logo: "assets/img/int/zendesk-logo.png",            pro: true,  plan: 'Premium' },
     //{ name: "Zoho",                category: INTEGRATIONS_CATEGORIES.OTHER,            key: INTEGRATIONS_KEYS.ZOHO,            src_icon: "assets/img/int/zoho-icon.png",                   src_logo: "assets/img/int/zoho-logo.png",               pro: true,  plan: 'Premium' }
@@ -258,6 +260,16 @@ export class DeepseekIntegration extends Integration {
     }
 }
 
+export class ElevenLabsIntegration extends Integration {
+    constructor() {
+        super();
+        this.name = INTEGRATIONS_KEYS.ELEVENLABS;
+        this.value = {
+            apikey: null,
+        }
+    }
+}
+
 export class QaplaIntegration extends Integration {
     constructor() {
         super();
@@ -315,3 +327,5 @@ export class N8nIntegration extends Integration {
         this.value = {};
     }
 }
+
+
