@@ -1,7 +1,7 @@
 import { Component, isDevMode, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from 'app/core/auth.service';
 import { IntegrationService } from 'app/services/integration.service';
-import { APPS_TITLE, BrevoIntegration, N8nIntegration, CATEGORIES_LIST, CustomerioIntegration, HubspotIntegration, INTEGRATIONS_CATEGORIES, INTEGRATIONS_KEYS, INTEGRATION_LIST_ARRAY, MakeIntegration, OpenaiIntegration, QaplaIntegration, INTEGRATION_LIST_ARRAY_CLONE, GoogleIntegration, AnthropicIntegration, GroqIntegration, CohereIntegration, DeepseekIntegration, OllamaIntegration, McpIntegration, vLLMIntegration, ElevenLabsIntegration} from './utils'; // , DeepseekIntegration
+import { APPS_TITLE, BrevoIntegration, N8nIntegration, CATEGORIES_LIST, CustomerioIntegration, HubspotIntegration, INTEGRATIONS_CATEGORIES, INTEGRATIONS_KEYS, INTEGRATION_LIST_ARRAY, MakeIntegration, OpenaiIntegration, QaplaIntegration, INTEGRATION_LIST_ARRAY_CLONE, GoogleIntegration, AnthropicIntegration, GroqIntegration, CohereIntegration, DeepseekIntegration, OllamaIntegration, McpIntegration, vLLMIntegration, ElevenLabsIntegration, CerebrasIntegration, OpenRouterIntegration } from './utils';
 import { LoggerService } from 'app/services/logger/logger.service';
 import { NotifyService } from 'app/core/notify.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -512,16 +512,17 @@ export class IntegrationsComponent implements OnInit, OnDestroy {
       if (!this.selectedIntegration) {
         this.selectedIntegration = this.initializeIntegration(integration.key);
       }
-      this.logger.log("[INTEGRATIONS]- onIntegrationSelect integration.category", integration.category, ' INTEGRATIONS_CATEGORIES.CHANNEL ', INTEGRATIONS_CATEGORIES.CHANNEL)
-      if (integration && integration.category === INTEGRATIONS_CATEGORIES.CHANNEL) {
-        this.logger.log("[INTEGRATIONS]- OLLa ")
-        // this.integrationSelectedName = "external";
-
+      const usesAppStoreIframe =
+        integration.category === INTEGRATIONS_CATEGORIES.CHANNEL
+        || (integration.category === INTEGRATIONS_CATEGORIES.VOICE
+          && integration.key !== INTEGRATIONS_KEYS.ELEVENLABS);
+      this.logger.log("[INTEGRATIONS]- onIntegrationSelect integration.category", integration.category, ' usesAppStoreIframe ', usesAppStoreIframe)
+      if (integration && usesAppStoreIframe) {
         this.logger.log("[INTEGRATIONS]- availableApps ", this.availableApps)
         const app = this.availableApps.find((a) => a.channel === integration.key);
         this.logger.log("[INTEGRATIONS]- app ", app)
 
-        // Only embed App Store iframe when a matching app exists (e.g. Twilio Voice). Native CHANNEL-like UIs must not use runURL.
+        // Only embed App Store iframe when a matching app exists (e.g. Twilio Voice, VXML). ElevenLabs uses native component.
         if (app && app.runURL) {
           this.integrationSelectedType = "external";
           this.showInIframe = true;
@@ -530,7 +531,7 @@ export class IntegrationsComponent implements OnInit, OnDestroy {
         } else {
           this.integrationSelectedType = "none";
           this.showInIframe = false;
-          this.logger.log("[INTEGRATIONS]- onIntegrationSelect no app for channel; skip iframe", integration.key)
+          this.logger.log("[INTEGRATIONS]- onIntegrationSelect no app for channel/voice; skip iframe", integration.key)
         }
       } else {
         this.showInIframe = false;
@@ -719,6 +720,14 @@ export class IntegrationsComponent implements OnInit, OnDestroy {
 
     if (key === INTEGRATIONS_KEYS.GROQ) {
       return new GroqIntegration();
+    }
+
+    if (key === INTEGRATIONS_KEYS.CEREBRAS) {
+      return new CerebrasIntegration();
+    }
+
+    if (key === INTEGRATIONS_KEYS.OPENROUTER) {
+      return new OpenRouterIntegration();
     }
 
     if (key === INTEGRATIONS_KEYS.COHERE) {
@@ -1154,6 +1163,14 @@ export class IntegrationsComponent implements OnInit, OnDestroy {
         let idx = this.CATEGORIES.findIndex(c => c.type === INTEGRATIONS_CATEGORIES.CHANNEL);
         if (idx != -1) {
           this.CATEGORIES.splice(idx, 1);
+        }
+      }
+
+      let voiceIndex = this.INTEGRATIONS.findIndex(i => i.category === INTEGRATIONS_CATEGORIES.VOICE);
+      if (voiceIndex === -1) {
+        let voiceCategoryIdx = this.CATEGORIES.findIndex(c => c.type === INTEGRATIONS_CATEGORIES.VOICE);
+        if (voiceCategoryIdx != -1) {
+          this.CATEGORIES.splice(voiceCategoryIdx, 1);
         }
       }
 

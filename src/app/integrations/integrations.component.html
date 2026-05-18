@@ -131,6 +131,18 @@
                                             (onDeleteIntegration)=integrationDeletedEvent($event)>
                                         </groq-integration>
 
+                                        <cerebras-integration *ngIf="integrationSelectedName === INT_KEYS.CEREBRAS"
+                                            [integration]="selectedIntegration"
+                                            (onUpdateIntegration)=integrationUpdateEvent($event)
+                                            (onDeleteIntegration)=integrationDeletedEvent($event)>
+                                        </cerebras-integration>
+
+                                        <openrouter-integration *ngIf="integrationSelectedName === INT_KEYS.OPENROUTER"
+                                            [integration]="selectedIntegration"
+                                            (onUpdateIntegration)=integrationUpdateEvent($event)
+                                            (onDeleteIntegration)=integrationDeletedEvent($event)>
+                                        </openrouter-integration>
+
                                         <cohere-integration *ngIf="integrationSelectedName === INT_KEYS.COHERE"
                                             [integration]="selectedIntegration"
                                             (onUpdateIntegration)=integrationUpdateEvent($event)

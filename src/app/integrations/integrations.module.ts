@@ -34,6 +34,8 @@ import { McpServerTableComponent } from './list/mcp-integration/mcp-server-table
 import { McpToolsModalComponent } from './list/mcp-integration/mcp-tools-modal/mcp-tools-modal.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ElevenlabsIntegrationComponent } from './list/elevenlabs-integration/elevenlabs-integration.component';
+import { CerebrasIntegrationComponent } from './list/cerebras-integration/cerebras-integration.component';
+import { OpenRouterIntegrationComponent } from './list/openrouter-integration/openrouter-integration.component';
 
 
 const routes: Routes = [
@@ -64,7 +66,9 @@ const routes: Routes = [
     McpToolsModalComponent,
     DeepseekIntegrationComponent,
     VLLMComponent,
-    ElevenlabsIntegrationComponent
+    ElevenlabsIntegrationComponent,
+    CerebrasIntegrationComponent,
+    OpenRouterIntegrationComponent
   ],
   imports: [
     RouterModule.forChild(routes),
