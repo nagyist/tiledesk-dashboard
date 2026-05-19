@@ -1,7 +1,10 @@
 # tiledesk-dashboard
  
-### 2.7.176 (not published)
+### 2.7.176
 - Implements multi-project availability
+- Deletes all content associated with a sitemap when the sitemap is deleted
+- Resolves filter/reset inconsistencies and empty state issues
+- Adds the ability to export unanswered and answered questions in CSV or JSON format
 
 ### 2.7.175
 - Adds OpenAI GPT-5.5 model
