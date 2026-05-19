@@ -2406,6 +2406,11 @@
     "Friday": "Vendredi",
     "Saturday": "Samedi",
     "SelectAnOption": "Sélectionnez une option",
+    "AnalyticsNew": {
+        "Loading": "Chargement des analyses…",
+        "ConfigurationMissing": "L'intégration d'analyse n'est pas configurée. Définissez analyticsApiBase et analyticsEmbedBase dans la configuration du tableau de bord (voir EMBED-INTEGRATION.md).",
+        "TokenError": "Impossible d'obtenir un jeton d'intégration d'analyse. Vérifiez votre session et que l'API d'analyse est accessible."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Analytique",
         "HeatMapTitle": "Conversations par heure de la journée",

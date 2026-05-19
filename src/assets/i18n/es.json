@@ -2383,6 +2383,11 @@
     "Friday": "Viernes",
     "Saturday": "Sábado",
     "SelectAnOption": "Seleccione una opción",
+    "AnalyticsNew": {
+        "Loading": "Cargando análisis…",
+        "ConfigurationMissing": "La incrustación de análisis no está configurada. Establezca analyticsApiBase y analyticsEmbedBase en la configuración del panel (consulte EMBED-INTEGRATION.md).",
+        "TokenError": "No se pudo obtener un token de incrustación de análisis. Verifique su sesión y que la API de análisis sea accesible."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Estadísticas",
         "HeatMapTitle": "Conversaciones por hora del día",

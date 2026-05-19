@@ -2406,6 +2406,11 @@
     "Friday": "Пятница",
     "Saturday": "Суббота",
     "SelectAnOption": "Выберите вариант",
+    "AnalyticsNew": {
+        "Loading": "Загрузка аналитики…",
+        "ConfigurationMissing": "Встраивание аналитики не настроено. Установите analyticsApiBase и analyticsEmbedBase в конфигурации панели управления (см. EMBED-INTEGRATION.md).",
+        "TokenError": "Не удалось получить токен для встраивания аналитики. Проверьте свою сессию и доступность API аналитики."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Аналитика",
         "HeatMapTitle": "Разговоров в час дня",

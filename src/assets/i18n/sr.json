@@ -2407,6 +2407,11 @@
     "Friday": "петак",
     "Saturday": "субота",
     "SelectAnOption": "Изаберите опцију",
+    "AnalyticsNew": {
+        "Loading": "Učitavanje analitike…",
+        "ConfigurationMissing": "Ugrađivanje analitike nije konfigurisano. Postavite analyticsApiBase i analyticsEmbedBase u konfiguraciji kontrolne table (pogledajte EMBED-INTEGRATION.md).",
+        "TokenError": "Nije moguće dobiti token za ugrađivanje analitike. Proverite svoju sesiju i da li je API analitike dostupan."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Аналитика",
         "HeatMapTitle": "Разговори по сату у дану",

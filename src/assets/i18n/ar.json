@@ -2407,6 +2407,11 @@
     "Friday": "جمعة",
     "Saturday": "السبت",
     "SelectAnOption": "حدد خيارا",
+    "AnalyticsNew": { 
+        "Loading": "جاري تحميل التحليلات…",
+        "ConfigurationMissing": "لم يتم تكوين تضمين التحليلات. قم بتعيين analyticsApiBase و analyticsEmbedBase في إعدادات لوحة التحكم (راجع EMBED-INTEGRATION.md).",
+        "TokenError": "تعذر الحصول على رمز تضمين التحليلات. تحقق من جلستك وتأكد من إمكانية الوصول إلى واجهة برمجة تطبيقات التحليلات."
+    },
     "Analytics": {
         "AnalyticsTITLE": "تحليلات",
         "HeatMapTitle": "المحادثات في الساعة من اليوم",

@@ -2406,6 +2406,11 @@
     "Friday": "Juma",
     "Saturday": "shanba",
     "SelectAnOption": "Variantni tanlang",
+    "AnalyticsNew": {
+        "Loading": "Analitika yuklanmoqda…",
+        "ConfigurationMissing": "Analitika joylashtirilishi sozlanmagan. Dashboard sozlamalarida analyticsApiBase va analyticsEmbedBase ni o'rnating (EMBED-INTEGRATION.md ga qarang).",
+        "TokenError": "Analitika joylashtirish tokenini olishning imkoni bo'lmadi. Sessiyangizni va analitika API manziliga yetib borish mumkinligini tekshiring."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Analitika",
         "HeatMapTitle": "Kunning bir soatiga suhbatlar",

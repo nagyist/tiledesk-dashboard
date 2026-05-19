@@ -2407,6 +2407,11 @@
     "Friday": "cümə",
     "Saturday": "şənbə",
     "SelectAnOption": "Seçim seçin",
+    "AnalyticsNew": {
+        "Loading": "Analitik yüklənir…",
+        "ConfigurationMissing": "Analitik daxiletmə konfiqurasiya edilməyib. Dashboard konfiqurasiyasında analyticsApiBase və analyticsEmbedBase təyin edin (EMBED-INTEGRATION.md-ə baxın).",
+        "TokenError": "Analitik daxiletmə tokeni əldə olunmadı. Sessiyanızı yoxlayın və analitik API-nin əlçatan olduğundan əmin olun."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Analitika",
         "HeatMapTitle": "Günün hər saatında söhbətlər",

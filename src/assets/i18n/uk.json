@@ -2423,6 +2423,11 @@
     "Friday": "п'ятниця",
     "Saturday": "субота",
     "SelectAnOption": "Виберіть опцію",
+    "AnalyticsNew": {
+        "Loading": "Завантаження аналітики…",
+        "ConfigurationMissing": "Вбудовування аналітики не налаштовано. Встановіть analyticsApiBase та analyticsEmbedBase у конфігурації панелі керування (див. EMBED-INTEGRATION.md).",
+        "TokenError": "Не вдалося отримати токен для вбудовування аналітики. Перевірте свою сесію та доступність API аналітики."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Аналітика",
         "HeatMapTitle": "Розмови за годину дня",

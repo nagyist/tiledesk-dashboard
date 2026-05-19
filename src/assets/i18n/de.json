@@ -2406,6 +2406,11 @@
 	"Friday": "Freitag",
 	"Saturday": "Samstag",
 	"SelectAnOption": "Wählen Sie eine Option",
+	"AnalyticsNew": {
+    	"Loading": "Analytics werden geladen…",
+    	"ConfigurationMissing": "Die Analytics-Einbettung ist nicht konfiguriert. Setzen Sie analyticsApiBase und analyticsEmbedBase in der Dashboard-Konfiguration (siehe EMBED-INTEGRATION.md).",
+    	"TokenError": "Ein Analytics-Einbettungstoken konnte nicht abgerufen werden. Überprüfen Sie Ihre Sitzung und stellen Sie sicher, dass die Analytics-API erreichbar ist."
+  	},
 	"Analytics": {
 		"AnalyticsTITLE": "Analytik",
 		"PanoramicaComponentTitle": "Überblick",

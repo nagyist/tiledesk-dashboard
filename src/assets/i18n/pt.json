@@ -2406,6 +2406,11 @@
     "Friday": "Sexta-feira",
     "Saturday": "Sábado",
     "SelectAnOption": "Selecione uma opção",
+    "AnalyticsNew": {
+        "Loading": "A carregar análises…",
+        "ConfigurationMissing": "A incorporação de análises não está configurada. Defina analyticsApiBase e analyticsEmbedBase na configuração do painel (consulte EMBED-INTEGRATION.md).",
+        "TokenError": "Não foi possível obter um token de incorporação de análises. Verifique a sua sessão e se a API de análises está acessível."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Análise",
         "HeatMapTitle": "Conversas por hora do dia",

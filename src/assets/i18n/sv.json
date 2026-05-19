@@ -2423,6 +2423,11 @@
     "Friday": "fredag",
     "Saturday": "lördag",
     "SelectAnOption": "Välj ett alternativ",
+    "AnalyticsNew": {
+        "Loading": "Laddar analys…",
+        "ConfigurationMissing": "Inbäddning av analys är inte konfigurerad. Ange analyticsApiBase och analyticsEmbedBase i instrumentpanelens konfiguration (se EMBED-INTEGRATION.md).",
+        "TokenError": "Kunde inte hämta en analysinbäddningstoken. Kontrollera din session och att analys-API:et är tillgängligt."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Analytics",
         "HeatMapTitle": "Samtal per timme på dygnet",
