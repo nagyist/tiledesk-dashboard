@@ -2148,6 +2148,7 @@
         "SearchingAnswer": "Söker efter ett passande svar...",
         "Answer": "Svar",
         "NoAnswerFound": "Kan inte hitta ett relevant svar",
+        "NoResponseGeneratedBecauseChunkOnlyEnabled": "Inget svar genererades (Chunk-only-läge är aktiverat)",
         "Sources": "Källor",
         "Source": "Källa",
         "TypeKbNamePlaceholder": "Kunskapsbasens namn",

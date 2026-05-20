@@ -2147,6 +2147,7 @@
         "SearchingAnswer": "Сәйкес жауап іздеуде...",
         "Answer": "Жауап",
         "NoAnswerFound": "Сәйкес жауап табу мүмкін емес",
+        "NoResponseGeneratedBecauseChunkOnlyEnabled": "Жауап жасалмады (Chunk-only режимі қосылған)",
         "Sources": "Дереккөздер",
         "Source": "Дереккөз",
         "TypeKbNamePlaceholder": "Білім қорының атауы",
