@@ -1,5 +1,11 @@
 # tiledesk-dashboard
- 
+
+### 2.7.177
+- Disables the stream option if the Chunks only option is enabled
+- Gets the fonts from the metadata object returned in the response if the Chunks only option is enabled.
+- Displays a specific message in the response field of the Knowledge Base Preview dialog if the Chunks only option is enabled
+- Fixes the bug : Ollama and Vllm models not displayed in preview
+
 ### 2.7.176
 - Implements multi-project availability
 - Deletes all content associated with a sitemap when the sitemap is deleted
