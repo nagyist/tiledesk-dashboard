@@ -599,10 +599,8 @@ export class ModalPreviewKnowledgeBaseComponent extends PricingBaseComponent imp
         //  this.previewUseStream = false;
         // }
 
-        // Cache and streaming are mutually exclusive: cached responses cannot
-        // be streamed. The helper forces stream off when cache is on and
-        // restores the previous stream value when cache is turned off again.
-        this.syncStreamWithCache();
+       
+       this.syncPreviewStreamWithSettings();
       } else {
         this.logger.log('[MODAL-PREVIEW-KB] editedAiSettings are empty')
       }
