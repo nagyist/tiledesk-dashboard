@@ -82,15 +82,11 @@ export class ModalPreviewKnowledgeBaseComponent extends PricingBaseComponent imp
   question: string = "";
   /** Preview: risposta in streaming (default) vs risposta completa in un’unica richiesta. */
   previewUseStream = true;
-   /**
-   * Snapshot of `previewUseStream` taken right before `useCache` is turned on,
-   * so we can restore it when the user turns cache off again. Cache and
-   * streaming are mutually exclusive at the API level, so we force stream off
-   * while cache is on; without this snapshot the stream toggle would stay off
-   * after disabling cache, even though the UI re-enables it.
-   * `null` means "no pending restore".
+  /**
+   * Snapshot of `previewUseStream` before cache or chunks-only forces stream off,
+   * restored when both are disabled again.
    */
-  private previewUseStreamBeforeCache: boolean | null = null;
+  private previewUseStreamBeforeExclusiveMode: boolean | null = null;
   answer: string = "";
   source_url: any;
   responseTime: number | null = null;
@@ -222,10 +218,8 @@ export class ModalPreviewKnowledgeBaseComponent extends PricingBaseComponent imp
       //  this.previewUseStream = false;
       // }
 
-      // Cache and streaming are mutually exclusive: cached responses cannot be
-      // streamed. The helper forces stream off when cache is on and restores
-      // the previous stream value when cache is turned off.
-      this.syncStreamWithCache();
+     
+      this.syncPreviewStreamWithSettings();
 
       this.logger.log('[MODAL-PREVIEW-KB] selectedNamespace', this.selectedNamespace)
       this.logger.log('[MODAL-PREVIEW-KB] selectedNamespace preview_settings', this.selectedNamespace.preview_settings)
@@ -309,22 +303,25 @@ export class ModalPreviewKnowledgeBaseComponent extends PricingBaseComponent imp
     }
   }
 
-   /**
-   * Keep `previewUseStream` in sync with `useCache`. Cache and streaming are
-   * mutually exclusive at the API level: when cache turns ON we snapshot the
-   * current stream value and force stream OFF; when cache turns OFF we restore
-   * the snapshotted value so the UI reflects what the user previously had.
-   * Idempotent on repeated calls with the same `useCache` state.
+
+   /** Stream toggle disabled when cache or chunks-only is on (mutually exclusive with streaming). */
+  get isPreviewStreamToggleDisabled(): boolean {
+    return this.useCache === true || this.chunkOnly === true;
+  }
+
+  /**
+   * Keep `previewUseStream` in sync with `useCache` and `chunkOnly`.
+   * When either is on: snapshot stream value and force stream off; when both off: restore.
    */
-  private syncStreamWithCache(): void {
-    if (this.useCache === true) {
-      if (this.previewUseStreamBeforeCache === null) {
-        this.previewUseStreamBeforeCache = this.previewUseStream;
+  private syncPreviewStreamWithSettings(): void {
+    if (this.isPreviewStreamToggleDisabled) {
+      if (this.previewUseStreamBeforeExclusiveMode === null) {
+        this.previewUseStreamBeforeExclusiveMode = this.previewUseStream;
       }
       this.previewUseStream = false;
-    } else if (this.previewUseStreamBeforeCache !== null) {
-      this.previewUseStream = this.previewUseStreamBeforeCache;
-      this.previewUseStreamBeforeCache = null;
+    } else if (this.previewUseStreamBeforeExclusiveMode !== null) {
+      this.previewUseStream = this.previewUseStreamBeforeExclusiveMode;
+      this.previewUseStreamBeforeExclusiveMode = null;
     }
   }
 
