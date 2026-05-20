@@ -304,7 +304,7 @@ export class ModalPreviewKnowledgeBaseComponent extends PricingBaseComponent imp
   }
 
 
-   /** Stream toggle disabled when cache or chunks-only is on (mutually exclusive with streaming). */
+  /** Stream toggle disabled when cache or chunks-only is on (mutually exclusive with streaming). */
   get isPreviewStreamToggleDisabled(): boolean {
     return this.useCache === true || this.chunkOnly === true;
   }
