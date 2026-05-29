@@ -1,5 +1,8 @@
 # tiledesk-dashboard
 
+### 2.7.178
+- Implements the new analytics (for test purpose)
+
 ### 2.7.177
 - Disables the stream option if the Chunks only option is enabled
 - Gets the fonts from the metadata object returned in the response if the Chunks only option is enabled.
