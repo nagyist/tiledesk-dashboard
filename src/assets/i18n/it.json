@@ -2097,6 +2097,8 @@
         "KbStatsAnswered": "Risposte",
         "KbStatsUnanswered": "Non risposte",
         "KbStatsAnswerRate": "Tasso di risposta",
+        "KbChartAnsweredUnansweredOverTime": "Risposte e non risposte nel tempo",
+        "KbChartAnswerRateOverTime": "Tasso di risposta nel tempo",
         "QuestionsTextSearchPlaceholder": "Ricerca testuale",
         "Questions": "Domande",
         "AnsweredQuestionsTab": "Risposte",

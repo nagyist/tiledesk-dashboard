@@ -362,6 +362,40 @@
                       <div class="kb-stats-card__value kb-stats-card__value--dark">{{ kbStatsAnswerRatePercent }}%</div>
                     </div>
                   </div>
+
+                  <div class="kb-stats-charts" *ngIf="selectedNamespace">
+                    <div class="kb-stats-chart-card">
+                      <div *ngIf="kbChartsLoading" class="kb-stats-chart-card__state">
+                        <mat-spinner diameter="28"></mat-spinner>
+                      </div>
+                      <div class="kb-stats-chart-card__panels"
+                           [class.kb-stats-chart-card__panels--hidden]="kbChartsLoading">
+                        <div class="kb-stats-chart-panel">
+                          <button type="button"
+                                  class="kb-stats-chart-card__title"
+                                  (click)="onKbChartTitleClick('answered-unanswered')">
+                            <span class="kb-stats-chart-card__title-text">
+                              {{ 'KbPage.KbChartAnsweredUnansweredOverTime' | translate }}
+                            </span>
+                            <mat-icon class="kb-stats-chart-card__title-arrow" aria-hidden="true">chevron_right</mat-icon>
+                          </button>
+                          <div #kbAnsweredUnansweredChart class="kb-stats-chart"></div>
+                        </div>
+                        <div class="kb-stats-chart-card__divider" aria-hidden="true"></div>
+                        <div class="kb-stats-chart-panel">
+                          <button type="button"
+                                  class="kb-stats-chart-card__title"
+                                  (click)="onKbChartTitleClick('answer-rate')">
+                            <span class="kb-stats-chart-card__title-text">
+                              {{ 'KbPage.KbChartAnswerRateOverTime' | translate }}
+                            </span>
+                            <mat-icon class="kb-stats-chart-card__title-arrow" aria-hidden="true">chevron_right</mat-icon>
+                          </button>
+                          <div #kbAnswerRateChart class="kb-stats-chart"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
       
                   <!-- TAB SWITCHER START -->
                     <!-- Vecchio switch a radio (segmented); sostituito da tab come in Domande -->
