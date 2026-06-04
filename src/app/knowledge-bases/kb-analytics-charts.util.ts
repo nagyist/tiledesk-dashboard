@@ -65,7 +65,6 @@ function extractPointsArray(res: unknown): Record<string, unknown>[] {
   if (Array.isArray(res)) { return res as Record<string, unknown>[]; }
   if (Array.isArray(root.data)) { return root.data as Record<string, unknown>[]; }
   if (Array.isArray(root.points)) { return root.points as Record<string, unknown>[]; }
-  // series[] with parallel arrays is handled by parseTimestampsSeriesFormat — skip here
   if (Array.isArray(root.series) && Array.isArray(root.timestamps)) { return []; }
   if (Array.isArray(root.series)) { return root.series as Record<string, unknown>[]; }
   if (Array.isArray(root.rows)) { return root.rows as Record<string, unknown>[]; }
@@ -147,40 +146,56 @@ export function computeAnswerRatePercent(answered: number, unanswered: number): 
   return Math.round((answered / total) * 1000) / 10;
 }
 
-/** Grid padding so line symbols are not clipped at the edges (sparkline in ~90px). */
-const SPARKLINE_GRID = { left: 8, right: 10, top: 22, bottom: 8, containLabel: false };
-const SPARKLINE_GRID_COMPACT = { left: 8, right: 10, top: 4, bottom: 8, containLabel: false };
+/** Bar charts: flush left/right so bars align with the KPI count above. */
+const BAR_CHART_GRID = { left: 0, right: 0, top: 2, bottom: 6, containLabel: false };
+/** Line sparkline: side padding so first/last point markers are not clipped. */
+const LINE_CHART_GRID = { left: 8, right: 10, top: 4, bottom: 8, containLabel: false };
 
-function sparklineCountYAxis(): EChartsOption['yAxis'] {
+function sparklineCountYAxis(maxValue: number): EChartsOption['yAxis'] {
   return {
     type: 'value',
+    min: 0,
+    max: Math.max(Math.ceil(maxValue * 1.15), 1),
     minInterval: 1,
     splitLine: { show: false },
     axisLine: { show: false },
     axisTick: { show: false },
     axisLabel: { show: false },
-    min: (value) => (value.min <= 0 ? -0.5 : Math.floor(value.min * 0.85)),
-    max: (value) => Math.ceil(Math.max(value.max, 1) * 1.2),
   };
 }
 
-function sparklineRateYAxis(): EChartsOption['yAxis'] {
+function sparklineRateYAxis(maxRate: number): EChartsOption['yAxis'] {
+  const max = maxRate <= 0
+    ? 100
+    : Math.min(100, Math.ceil(Math.max(maxRate, 5) * 1.08));
+
   return {
     type: 'value',
+    min: 0,
+    max,
     splitLine: { show: false },
     axisLine: { show: false },
     axisTick: { show: false },
     axisLabel: { show: false },
-    min: (value) => (value.min <= 0 ? -4 : Math.floor(value.min * 0.92)),
-    max: (value) => Math.ceil(Math.max(value.max, 5) * 1.08),
   };
 }
 
-function sparklineXAxis(pointCount: number): EChartsOption['xAxis'] {
+function sparklineBarXAxis(points: KbOverTimePoint[]): EChartsOption['xAxis'] {
   return {
     type: 'category',
     boundaryGap: false,
-    data: Array.from({ length: pointCount }, () => ''),
+    data: points.map((p) => p.dayKey),
+    axisLine: { show: false },
+    axisTick: { show: false },
+    axisLabel: { show: false },
+  };
+}
+
+function sparklineLineXAxis(points: KbOverTimePoint[]): EChartsOption['xAxis'] {
+  return {
+    type: 'category',
+    boundaryGap: false,
+    data: points.map((p) => p.dayKey),
     axisLine: { show: false },
     axisTick: { show: false },
     axisLabel: { show: false },
@@ -191,72 +206,70 @@ function buildAxisTooltipDayHeader(points: KbOverTimePoint[], dataIndex: number)
   return formatChartDayLabel(points[dataIndex]?.dayKey ?? '');
 }
 
-export function buildAnsweredUnansweredChartOption(
+export function buildKbCountBarChartOption(
   points: KbOverTimePoint[],
-  labels: { answered: string; unanswered: string },
+  field: 'answered' | 'unanswered',
+  label: string,
+  color: string,
 ): EChartsOption {
+  const data = points.map((p) => p[field]);
+  const maxCount = data.reduce((max, value) => Math.max(max, value), 0);
+
   return {
-    color: [ANSWERED_COLOR, UNANSWERED_COLOR],
-    grid: SPARKLINE_GRID,
+    color: [color],
+    grid: BAR_CHART_GRID,
     tooltip: {
       trigger: 'axis',
       confine: true,
       formatter: (params) => {
-        const items = Array.isArray(params) ? params : [params];
-        if (!items.length) { return ''; }
-        const idx = items[0].dataIndex ?? 0;
+        const item = Array.isArray(params) ? params[0] : params;
+        if (!item) { return ''; }
+        const idx = item.dataIndex ?? 0;
         const day = buildAxisTooltipDayHeader(points, idx);
-        return items.reduce(
-          (html, item) => `${html}${item.marker} ${item.seriesName}: ${item.value}<br/>`,
-          `${day}<br/>`,
-        );
+        return `${day}<br/>${item.marker} ${item.seriesName}: ${item.value}`;
       },
     },
-    legend: {
-      top: 0,
-      left: 0,
-      itemWidth: 8,
-      itemHeight: 8,
-      itemGap: 8,
-      textStyle: { fontSize: 10, color: '#566787' },
-    },
-    xAxis: sparklineXAxis(points.length),
-    yAxis: sparklineCountYAxis(),
+    xAxis: sparklineBarXAxis(points),
+    yAxis: sparklineCountYAxis(maxCount),
     series: [
       {
-        name: labels.answered,
-        type: 'line',
-        smooth: true,
-        showSymbol: true,
-        symbolSize: 6,
-        clip: false,
-        lineStyle: { width: 2 },
-        data: points.map((p) => p.answered),
-      },
-      {
-        name: labels.unanswered,
-        type: 'line',
-        smooth: true,
-        showSymbol: true,
-        symbolSize: 6,
-        clip: false,
-        lineStyle: { width: 2 },
-        data: points.map((p) => p.unanswered),
+        name: label,
+        type: 'bar',
+        barWidth: '72%',
+        barCategoryGap: '18%',
+        barMinHeight: 2,
+        itemStyle: { color, borderRadius: [2, 2, 0, 0] },
+        data,
       },
     ],
   };
 }
 
-/** Answer rate over time — line chart (better for % trends over 7 days). */
+export function buildAnsweredBarChartOption(
+  points: KbOverTimePoint[],
+  label: string,
+): EChartsOption {
+  return buildKbCountBarChartOption(points, 'answered', label, ANSWERED_COLOR);
+}
+
+export function buildUnansweredBarChartOption(
+  points: KbOverTimePoint[],
+  label: string,
+): EChartsOption {
+  return buildKbCountBarChartOption(points, 'unanswered', label, UNANSWERED_COLOR);
+}
+
+/** Answer rate over time — line sparkline. */
 export function buildAnswerRateChartOption(
   points: KbOverTimePoint[],
   label: string,
 ): EChartsOption {
   const rates = points.map((p) => computeAnswerRatePercent(p.answered, p.unanswered));
+  const maxRate = rates.reduce((max, rate) => Math.max(max, rate), 0);
 
   return {
     color: [RATE_COLOR],
-    grid: SPARKLINE_GRID_COMPACT,
+    grid: LINE_CHART_GRID,
     tooltip: {
       trigger: 'axis',
       confine: true,
@@ -268,8 +281,8 @@ export function buildAnswerRateChartOption(
         return `${day}<br/>${item.marker} ${item.seriesName}: ${item.value}%`;
       },
     },
-    xAxis: sparklineXAxis(points.length),
-    yAxis: sparklineRateYAxis(),
+    xAxis: sparklineLineXAxis(points),
+    yAxis: sparklineRateYAxis(maxRate),
     series: [
       {
         name: label,

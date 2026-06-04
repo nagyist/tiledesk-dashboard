@@ -1281,6 +1281,28 @@ table {
     flex-direction: column;
 }
 
+.kb-stats-chart-panel--contents {
+    flex: 0 0 auto;
+    width: 18%;
+    min-width: 108px;
+    max-width: 160px;
+    justify-content: flex-start;
+}
+
+.kb-stats-chart-panel__value {
+    flex: 0 0 auto;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: rgb(27, 25, 25);
+    margin-bottom: 2px;
+    padding-left: 0;
+}
+
+.kb-stats-chart-panel--contents .kb-stats-chart-panel__value {
+    margin-bottom: 0;
+}
+
 .kb-stats-chart-card__divider {
     flex: 0 0 1px;
     width: 1px;
@@ -1303,8 +1325,11 @@ table {
     cursor: pointer;
     text-align: left;
     font-family: var(--header-font-family);
+    &:not(.contents) {
+        cursor: pointer;
+    }
 
-    &:hover .kb-stats-chart-card__title-text {
+    &:hover .kb-stats-chart-card__title-text:not(.contents) {
         text-decoration: underline;
     }
 }
@@ -1339,7 +1364,10 @@ table {
 .kb-stats-chart {
     flex: 1 1 auto;
     width: 100%;
-    min-height: 0;
+    min-height: 52px;
+    height: 100%;
+    margin-left: 0;
+    padding-left: 0;
     overflow: visible;
 }
 

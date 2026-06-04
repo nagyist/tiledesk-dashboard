@@ -10,7 +10,7 @@ export interface EmbedTokenResponse {
   type: string;
 }
 
-export type AnalyticsKbChartId = 'answered-unanswered' | 'answer-rate';
+export type AnalyticsKbChartId = 'answered' | 'unanswered' | 'answer-rate';
 
 /** postMessage payload when a KB sparkline title is clicked in the dashboard. */
 export interface AnalyticsKbChartClickMessage {

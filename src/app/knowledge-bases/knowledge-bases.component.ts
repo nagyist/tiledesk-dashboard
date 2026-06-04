@@ -47,19 +47,20 @@ import { ModalAddContentComponent } from './modals/modal-add-content/modal-add-c
 import { KnowledgeBaseTableComponent } from './modals/knowledge-base-table/knowledge-base-table.component';
 import { UnansweredQuestionsService, UnansweredQuestion } from 'app/services/unanswered-questions.service';
 import * as echarts from 'echarts/core';
-import { LineChart } from 'echarts/charts';
-import { GridComponent, LegendComponent, TooltipComponent } from 'echarts/components';
+import { BarChart, LineChart } from 'echarts/charts';
+import { GridComponent, TooltipComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import {
   alignPointsToDayKeys,
-  buildAnsweredUnansweredChartOption,
+  buildAnsweredBarChartOption,
   buildAnswerRateChartOption,
   buildDayKeysBetween,
+  buildUnansweredBarChartOption,
   KbOverTimePoint,
   parseKbOverTimeResponse,
 } from './kb-analytics-charts.util';
 
-echarts.use([LineChart, GridComponent, TooltipComponent, LegendComponent, CanvasRenderer]);
+echarts.use([BarChart, LineChart, GridComponent, TooltipComponent, CanvasRenderer]);
 import { QuotesService } from 'app/services/quotes.service';
 import { RoleService } from 'app/services/role.service';
 import { RolesService } from 'app/services/roles.service';
@@ -133,11 +134,13 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
   kbStatsUnansweredCount = 0;
   kbChartsLoading = false;
 
-  @ViewChild('kbAnsweredUnansweredChart') kbAnsweredUnansweredChartRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('kbAnsweredChart') kbAnsweredChartRef?: ElementRef<HTMLDivElement>;
+  @ViewChild('kbUnansweredChart') kbUnansweredChartRef?: ElementRef<HTMLDivElement>;
   @ViewChild('kbAnswerRateChart') kbAnswerRateChartRef?: ElementRef<HTMLDivElement>;
 
   private kbChartPoints: KbOverTimePoint[] = [];
-  private answeredUnansweredChart?: echarts.ECharts;
+  private answeredChart?: echarts.ECharts;
+  private unansweredChart?: echarts.ECharts;
   private answerRateChart?: echarts.ECharts;
   private kbChartsRequestId = 0;
   refreshKbsList: boolean = true;
@@ -4714,7 +4717,14 @@ _presentDialogImportContents() {
           this.kbChartsLoading = false;
           const dayKeys = buildDayKeysBetween(new Date(startDate), new Date(endDate));
           this.kbChartPoints = alignPointsToDayKeys(dayKeys, parseKbOverTimeResponse(res));
-          setTimeout(() => this.renderKbCharts());
+          setTimeout(() => {
+            this.renderKbCharts();
+            requestAnimationFrame(() => {
+              this.answeredChart?.resize();
+              this.unansweredChart?.resize();
+              this.answerRateChart?.resize();
+            });
+          });
           this.logger.log('[KnowledgeBasesComponent] Loaded questions stats for charts', res);
         },
         error: (err) => {
@@ -4728,14 +4738,17 @@ _presentDialogImportContents() {
 
   @HostListener('window:resize')
   onKbChartsResize(): void {
-    this.answeredUnansweredChart?.resize();
+    this.answeredChart?.resize();
+    this.unansweredChart?.resize();
     this.answerRateChart?.resize();
   }
 
   private disposeKbCharts(): void {
-    this.answeredUnansweredChart?.dispose();
+    this.answeredChart?.dispose();
+    this.unansweredChart?.dispose();
     this.answerRateChart?.dispose();
-    this.answeredUnansweredChart = undefined;
+    this.answeredChart = undefined;
+    this.unansweredChart = undefined;
     this.answerRateChart = undefined;
   }
 
@@ -4753,22 +4766,28 @@ _presentDialogImportContents() {
   }
 
   private renderKbCharts(): void {
-    const answeredEl = this.kbAnsweredUnansweredChartRef?.nativeElement;
+    const answeredEl = this.kbAnsweredChartRef?.nativeElement;
+    const unansweredEl = this.kbUnansweredChartRef?.nativeElement;
     const rateEl = this.kbAnswerRateChartRef?.nativeElement;
-    if (!answeredEl || !rateEl || !this.kbChartPoints.length) { return; }
+    if (!answeredEl || !unansweredEl || !rateEl || !this.kbChartPoints.length) { return; }
 
     const answeredLabel = this.translate.instant('KbPage.KbStatsAnswered');
     const unansweredLabel = this.translate.instant('KbPage.KbStatsUnanswered');
-    const rateLabel = this.translate.instant('KbPage.KbChartAnswerRateOverTime');
+    const rateLabel = this.translate.instant('KbPage.KbStatsAnswerRate');
 
-    if (!this.answeredUnansweredChart) {
-      this.answeredUnansweredChart = echarts.init(answeredEl);
+    if (!this.answeredChart) {
+      this.answeredChart = echarts.init(answeredEl);
     }
-    this.answeredUnansweredChart.setOption(
-      buildAnsweredUnansweredChartOption(this.kbChartPoints, {
-        answered: answeredLabel,
-        unanswered: unansweredLabel,
-      }),
+    this.answeredChart.setOption(
+      buildAnsweredBarChartOption(this.kbChartPoints, answeredLabel),
+      true,
+    );
+
+    if (!this.unansweredChart) {
+      this.unansweredChart = echarts.init(unansweredEl);
+    }
+    this.unansweredChart.setOption(
+      buildUnansweredBarChartOption(this.kbChartPoints, unansweredLabel),
       true,
     );
 
@@ -4780,7 +4799,8 @@ _presentDialogImportContents() {
       true,
     );
 
-    this.answeredUnansweredChart.resize();
+    this.answeredChart.resize();
+    this.unansweredChart.resize();
     this.answerRateChart.resize();
   }
 
