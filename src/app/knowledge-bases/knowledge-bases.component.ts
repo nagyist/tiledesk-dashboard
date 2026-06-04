@@ -4685,14 +4685,14 @@ _presentDialogImportContents() {
   }
 
   /**
-   * Last 7 calendar days including today.
+   * Last 3 weeks (21 calendar days) including today.
    * Analytics API uses [from, to) at UTC midnight — `to` is exclusive, so end is tomorrow 00:00.
    */
-  private getChartsLast7DaysRange(): { startDate: string; endDate: string } {
+  private getChartsLast3WeeksRange(): { startDate: string; endDate: string } {
     const todayStart = new Date();
     todayStart.setUTCHours(0, 0, 0, 0);
     const end = this.shiftUtcCalendarDays(todayStart, 1);
-    const start = this.shiftUtcCalendarDays(end, -7);
+    const start = this.shiftUtcCalendarDays(end, -21);
     return {
       startDate: start.toISOString(),
       endDate: end.toISOString(),
@@ -4708,7 +4708,7 @@ _presentDialogImportContents() {
 
     const requestId = ++this.kbChartsRequestId;
     this.kbChartsLoading = true;
-    const { startDate, endDate } = this.getChartsLast7DaysRange();
+    const { startDate, endDate } = this.getChartsLast3WeeksRange();
 
     this.kbService.getAnwseredUnansweredQuestionsForCharts(startDate, endDate, namespaceId)
       .subscribe({
