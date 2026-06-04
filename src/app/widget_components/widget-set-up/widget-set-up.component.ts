@@ -2803,7 +2803,7 @@ export class WidgetSetUp extends WidgetSetUpBaseComponent implements OnInit, Aft
         // -------------------------------------------------------
         // Display / hide Voice streaming button (if widget object)
         // -------------------------------------------------------
-        console.log('[WIDGET-SET-UP] - (onInit WIDGET DEFINED) >  project.widget hasOwnProperty showAudioStreamFooterButton', project.widget.hasOwnProperty('showAudioStreamFooterButton'));
+        // console.log('[WIDGET-SET-UP] - (onInit WIDGET DEFINED) >  project.widget hasOwnProperty showAudioStreamFooterButton', project.widget.hasOwnProperty('showAudioStreamFooterButton'));
         if (project.widget.hasOwnProperty('showAudioStreamFooterButton')) {
           if (project.widget.showAudioStreamFooterButton === true) {
 
