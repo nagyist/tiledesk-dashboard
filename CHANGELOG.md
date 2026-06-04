@@ -1,5 +1,8 @@
 # tiledesk-dashboard
 
+### 2.7.179
+- Implements ElevenLabs, Cerebras and OpenRouter in Integrations
+
 ### 2.7.178
 - Implements the new analytics (for test purpose)
 
