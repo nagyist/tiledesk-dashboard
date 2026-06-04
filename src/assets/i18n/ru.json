@@ -2134,6 +2134,7 @@
         "SearchingAnswer": "Ищем подходящий ответ...",
         "Answer": "Отвечать",
         "NoAnswerFound": "He удалось найти соответствующий ответ",
+        "NoResponseGeneratedBecauseChunkOnlyEnabled": "Ответ не сгенерирован (Режим Chunk-only включен)",
         "Sources": "Источники",
         "Source": "Источник",
         "TypeKbNamePlaceholder": "Название базы знаний",
@@ -2285,6 +2286,9 @@
         "HybridKbDesc": "Объединяет смысл, сопоставление ключевых слов и переранжирование для более точного извлечения данных.",
         "WantTryTheHybridSearch": "Хотите попробовать новую функцию гибридного поиска?",
         "DeletingTheSitemapNotDeleteTheContents": "Удаление карты сайта не удаляет автоматически связанные с ней содержимое.",
+        "DeletingTheSitemapDeleteTheContents": "Удаление карты сайта автоматически удалит любой связанный с ней контент.",
+        "DeletingTheSitemapDeleteTheContentsStrong": "Удаление карты сайта <b>автоматически удалит любой связанный с ней контент.</b>",
+        "Deleting": "Удаление",
         "------": "------",
         "NoContentAdded": "У вас пока нет контента",
         "NoKbAddedText": "Добавьте контент в свою базу знаний, чтобы автоматически отвечать пользователям с помощью искусственного интеллекта.",
@@ -2408,6 +2412,11 @@
     "Friday": "Пятница",
     "Saturday": "Суббота",
     "SelectAnOption": "Выберите вариант",
+    "AnalyticsNew": {
+        "Loading": "Загрузка аналитики…",
+        "ConfigurationMissing": "Встраивание аналитики не настроено. Установите analyticsApiBase и analyticsEmbedBase в конфигурации панели управления (см. EMBED-INTEGRATION.md).",
+        "TokenError": "Не удалось получить токен для встраивания аналитики. Проверьте свою сессию и доступность API аналитики."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Аналитика",
         "HeatMapTitle": "Разговоров в час дня",
@@ -3257,6 +3266,7 @@
     "InTheCSVFileToBeUploadedTheColumnsAreSeparatedBy": "В файле CSV, который необходимо загрузить, столбцы разделены",
     "ExportAndImport":"Экспорт и импорт",
     "ExportAsJSON": "Экспортировать как JSON",
+    "ExportAsCSV": "Экспортировать в CSV",
     "ImportFromJSON": "Импорт из JSON",
     "ImportFromCSV":"Импорт из CSV",
     "ConvertToOffline":"Преобразовать в автономный режим",

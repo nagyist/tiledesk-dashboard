@@ -2134,6 +2134,7 @@
         "SearchingAnswer": "جاري البحث عن إجابة مناسبة...",
         "Answer": "إجابة",
         "NoAnswerFound": "غير قادر على العثور على إجابة ذات صلة",
+        "NoResponseGeneratedBecauseChunkOnlyEnabled": "لم يتم إنشاء رد (وضع Chunk-only مفعل)",
         "Sources": "المصادر",
         "Source": "مصدر",
         "TypeKbNamePlaceholder": "اسم قاعدة المعرفة",
@@ -2286,6 +2287,9 @@
         "HybridKbDesc": "يجمع بين مطابقة المعنى، والكلمات المفتاحية، وإعادة الترتيب لاسترجاع بيانات أكثر دقة",
         "WantTryTheHybridSearch": "هل تريد تجربة ميزة البحث الهجين الجديدة؟",
         "DeletingTheSitemapNotDeleteTheContents": "حذف خريطة الموقع لا يحذف المحتويات المرتبطة بها تلقائيًا.",
+        "DeletingTheSitemapDeleteTheContents": "سيؤدي حذف خريطة الموقع إلى حذف أي محتوى مرتبط بها تلقائيًا.",
+        "DeletingTheSitemapDeleteTheContentsStrong": "حذف خريطة الموقع <b>سيؤدي تلقائيًا إلى حذف أي محتوى مرتبط بها.</b>",
+        "Deleting": "جاري الحذف",
         "------": "------",
         "NoContentAdded": "ليس لديك أي محتوى بعد",
         "NoKbAddedText": "أضف محتوى إلى قاعدة المعرفة الخاصة بك للرد تلقائيًا على المستخدمين باستخدام الذكاء الاصطناعي.",
@@ -2409,6 +2413,11 @@
     "Friday": "جمعة",
     "Saturday": "السبت",
     "SelectAnOption": "حدد خيارا",
+    "AnalyticsNew": { 
+        "Loading": "جاري تحميل التحليلات…",
+        "ConfigurationMissing": "لم يتم تكوين تضمين التحليلات. قم بتعيين analyticsApiBase و analyticsEmbedBase في إعدادات لوحة التحكم (راجع EMBED-INTEGRATION.md).",
+        "TokenError": "تعذر الحصول على رمز تضمين التحليلات. تحقق من جلستك وتأكد من إمكانية الوصول إلى واجهة برمجة تطبيقات التحليلات."
+    },
     "Analytics": {
         "AnalyticsTITLE": "تحليلات",
         "HeatMapTitle": "المحادثات في الساعة من اليوم",
@@ -3258,6 +3267,7 @@
     "InTheCSVFileToBeUploadedTheColumnsAreSeparatedBy": "في ملف CSV المراد تحميله ، يتم فصل الأعمدة بـ",
     "ExportAndImport": "تصدير واستيراد",
     "ExportAsJSON": "تصدير بتنسيق JSON",
+    "ExportAsCSV": "تصدير بصيغة CSV",
     "ImportFromJSON": "استيراد من JSON",
     "ImportFromCSV": "استيراد من CSV",
     "ConvertToOffline": "تحويل إلى غير متصل بالشبكة",

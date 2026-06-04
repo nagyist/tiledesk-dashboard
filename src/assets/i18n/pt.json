@@ -2133,6 +2133,7 @@
         "SearchingAnswer": "Procurando uma resposta adequada...",
         "Answer": "Responder",
         "NoAnswerFound": "Não foi possível encontrar uma resposta relevante",
+        "NoResponseGeneratedBecauseChunkOnlyEnabled": "Nenhuma resposta gerada (O modo Chunk-only está ativado)",
         "Sources": "Fontes",
         "Source": "Fonte",
         "TypeKbNamePlaceholder": "Nome da Base de Conhecimento",
@@ -2285,6 +2286,9 @@
         "HybridKbDesc": "Combina significado, correspondência de palavras-chave e reordenação para uma recuperação de dados mais precisa.",
         "WantTryTheHybridSearch": "Quer experimentar o novo recurso de Pesquisa Híbrida?",
         "DeletingTheSitemapNotDeleteTheContents": "Excluir o sitemap não exclui automaticamente os conteúdos associados.",
+        "DeletingTheSitemapDeleteTheContents": "Eliminar o sitemap eliminará automaticamente qualquer conteúdo associado a ele.",
+        "DeletingTheSitemapDeleteTheContentsStrong": "Eliminar o sitemap <b>eliminará automaticamente qualquer conteúdo associado a ele.</b>",
+        "Deleting": "A eliminar",
         "------": "------",
         "NoContentAdded": "Ainda não tem nenhum conteúdo",
         "NoKbAddedText": "Adicione conteúdo à sua base de conhecimento para responder automaticamente aos seus usuários usando inteligência artificial.",
@@ -2408,6 +2412,11 @@
     "Friday": "Sexta-feira",
     "Saturday": "Sábado",
     "SelectAnOption": "Selecione uma opção",
+    "AnalyticsNew": {
+        "Loading": "A carregar análises…",
+        "ConfigurationMissing": "A incorporação de análises não está configurada. Defina analyticsApiBase e analyticsEmbedBase na configuração do painel (consulte EMBED-INTEGRATION.md).",
+        "TokenError": "Não foi possível obter um token de incorporação de análises. Verifique a sua sessão e se a API de análises está acessível."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Análise",
         "HeatMapTitle": "Conversas por hora do dia",
@@ -3257,6 +3266,7 @@
     "InTheCSVFileToBeUploadedTheColumnsAreSeparatedBy": "No arquivo CSV a ser carregado, as colunas são separadas por",
     "ExportAndImport": "Exportar e Importar",
     "ExportAsJSON": "Exportar como JSON",
+    "ExportAsCSV": "Exportar como CSV",
     "ImportFromJSON": "Importar de JSON",
     "ImportFromCSV": "Importar de CSV",
     "ConvertToOffline": "Converter para off-line",

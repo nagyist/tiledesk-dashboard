@@ -2134,6 +2134,7 @@
         "SearchingAnswer": "Uyğun cavab axtarılır...",
         "Answer": "Cavab verin",
         "NoAnswerFound": "Müvafiq cavab tapmaq mümkün deyil",
+        "NoResponseGeneratedBecauseChunkOnlyEnabled": "Cavab yaradılmadı (Chunk-only rejimi aktivdir)",
         "Sources": "Mənbələr",
         "Source": "Mənbə",
         "TypeKbNamePlaceholder": "Bilik bazasının adı",
@@ -2286,6 +2287,9 @@
         "HybridKbDesc": "Daha dəqiq məlumat çıxarılması üçün məna, açar söz uyğunluğu və yenidən sıralamanı birləşdirir.",
         "WantTryTheHybridSearch": "Yeni Hibrid Axtarış funksiyasını sınamaq istəyirsiniz?",
         "DeletingTheSitemapNotDeleteTheContents": "Xəritəni silmək onunla əlaqəli məzmunları avtomatik olaraq silmir.",
+        "DeletingTheSitemapDeleteTheContents": "Sitemap-in silinməsi onunla əlaqəli istənilən məzmunu avtomatik olaraq siləcək.",
+        "DeletingTheSitemapDeleteTheContentsStrong": "Sitemap-in silinməsi <b>onunla əlaqəli istənilən məzmunu avtomatik olaraq siləcək.</b>",
+        "Deleting": "Silinir",
         "------": "------",
         "NoContentAdded": "Hələ heç bir məzmununuz yoxdur",
         "NoKbAddedText": "Süni intellektdən istifadə edərək istifadəçilərinizə avtomatik cavab vermək üçün Bilik Bazanıza məzmun əlavə edin.",
@@ -2409,6 +2413,11 @@
     "Friday": "cümə",
     "Saturday": "şənbə",
     "SelectAnOption": "Seçim seçin",
+    "AnalyticsNew": {
+        "Loading": "Analitik yüklənir…",
+        "ConfigurationMissing": "Analitik daxiletmə konfiqurasiya edilməyib. Dashboard konfiqurasiyasında analyticsApiBase və analyticsEmbedBase təyin edin (EMBED-INTEGRATION.md-ə baxın).",
+        "TokenError": "Analitik daxiletmə tokeni əldə olunmadı. Sessiyanızı yoxlayın və analitik API-nin əlçatan olduğundan əmin olun."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Analitika",
         "HeatMapTitle": "Günün hər saatında söhbətlər",
@@ -3257,6 +3266,7 @@
     "InTheCSVFileToBeUploadedTheColumnsAreSeparatedBy":"Yüklənəcək CSV faylında sütunlar ilə ayrılır",
     "ExportAndImport":"İxrac və İdxal",
     "ExportAsJSON": "JSON kimi ixrac edin",
+    "ExportAsCSV": "CSV kimi ixrac et",
     "ImportFromJSON": "JSON-dan idxal edin",
     "ImportFromCSV":"CSV-dən idxal edin",
     "ConvertToOffline":"Oflayna çevirin",

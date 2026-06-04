@@ -2150,6 +2150,7 @@
         "SearchingAnswer": "Söker efter ett passande svar...",
         "Answer": "Svar",
         "NoAnswerFound": "Kan inte hitta ett relevant svar",
+        "NoResponseGeneratedBecauseChunkOnlyEnabled": "Inget svar genererades (Chunk-only-läge är aktiverat)",
         "Sources": "Källor",
         "Source": "Källa",
         "TypeKbNamePlaceholder": "Kunskapsbasens namn",
@@ -2302,6 +2303,9 @@
         "HybridKbDesc": "Kombinerar betydelse, nyckelordsmatchning och omrangering för mer exakt datahämtning.",
         "WantTryTheHybridSearch": "Vill du prova den nya hybridsökningsfunktionen?",
         "DeletingTheSitemapNotDeleteTheContents": "Radering av webbplatskartan raderar inte automatiskt de tillhörande innehållen.",
+        "DeletingTheSitemapDeleteTheContents": "Om du tar bort webbplatskartan raderas automatiskt allt innehåll som är kopplat till den.",
+        "DeletingTheSitemapDeleteTheContentsStrong": "Om du tar bort webbplatskartan <b>raderas automatiskt allt innehåll som är kopplat till den.</b>",
+        "Deleting": "Raderar",
         "------": "------",
         "NoContentAdded": "Du har inget innehåll ännu",
         "NoKbAddedText": "Lägg till innehåll i din kunskapsbas för att automatiskt svara dina användare med hjälp av artificiell intelligens.",
@@ -2425,6 +2429,11 @@
     "Friday": "fredag",
     "Saturday": "lördag",
     "SelectAnOption": "Välj ett alternativ",
+    "AnalyticsNew": {
+        "Loading": "Laddar analys…",
+        "ConfigurationMissing": "Inbäddning av analys är inte konfigurerad. Ange analyticsApiBase och analyticsEmbedBase i instrumentpanelens konfiguration (se EMBED-INTEGRATION.md).",
+        "TokenError": "Kunde inte hämta en analysinbäddningstoken. Kontrollera din session och att analys-API:et är tillgängligt."
+    },
     "Analytics": {
         "AnalyticsTITLE": "Analytics",
         "HeatMapTitle": "Samtal per timme på dygnet",
@@ -3273,6 +3282,7 @@
     "InTheCSVFileToBeUploadedTheColumnsAreSeparatedBy": "I CSV-filen som ska laddas upp är kolumnerna åtskilda av",
     "ExportAndImport": "Exportera och importera",
     "ExportAsJSON": "Exportera som JSON",
+    "ExportAsCSV": "Exportera som CSV",
     "ImportFromJSON": "Importera från JSON",
     "ImportFromCSV": "Importera från CSV",
     "ConvertToOffline": "Konvertera till offline",
