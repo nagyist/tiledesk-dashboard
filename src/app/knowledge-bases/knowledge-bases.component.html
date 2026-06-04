@@ -368,8 +368,7 @@
                       <div *ngIf="kbChartsLoading" class="kb-stats-chart-card__state">
                         <mat-spinner diameter="28"></mat-spinner>
                       </div>
-                      <div class="kb-stats-chart-card__panels"
-                           [class.kb-stats-chart-card__panels--hidden]="kbChartsLoading">
+                      <div *ngIf="!kbChartsLoading" class="kb-stats-chart-card__panels">
                         <div class="kb-stats-chart-panel kb-stats-chart-panel--contents">
                           <button type="button"
                                   class="kb-stats-chart-card__title"

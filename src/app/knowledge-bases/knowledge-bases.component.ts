@@ -1,4 +1,14 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild, isDevMode } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  isDevMode,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'app/core/auth.service';
@@ -503,7 +513,8 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
     private unansweredQuestionsService: UnansweredQuestionsService,
     private quotasService: QuotesService,
     private roleService: RoleService,
-    private rolesService: RolesService
+    private rolesService: RolesService,
+    private cdr: ChangeDetectorRef,
   ) {
     super(prjctPlanService, notify);
     const brand = brandService.getBrand();
@@ -4708,23 +4719,18 @@ _presentDialogImportContents() {
 
     const requestId = ++this.kbChartsRequestId;
     this.kbChartsLoading = true;
+    this.disposeKbCharts();
     const { startDate, endDate } = this.getChartsLast3WeeksRange();
 
     this.kbService.getAnwseredUnansweredQuestionsForCharts(startDate, endDate, namespaceId)
       .subscribe({
         next: (res) => {
           if (requestId !== this.kbChartsRequestId) { return; }
-          this.kbChartsLoading = false;
           const dayKeys = buildDayKeysBetween(new Date(startDate), new Date(endDate));
           this.kbChartPoints = alignPointsToDayKeys(dayKeys, parseKbOverTimeResponse(res));
-          setTimeout(() => {
-            this.renderKbCharts();
-            requestAnimationFrame(() => {
-              this.answeredChart?.resize();
-              this.unansweredChart?.resize();
-              this.answerRateChart?.resize();
-            });
-          });
+          this.kbChartsLoading = false;
+          this.cdr.detectChanges();
+          this.scheduleKbChartsRender();
           this.logger.log('[KnowledgeBasesComponent] Loaded questions stats for charts', res);
         },
         error: (err) => {
@@ -4750,6 +4756,43 @@ _presentDialogImportContents() {
     this.answeredChart = undefined;
     this.unansweredChart = undefined;
     this.answerRateChart = undefined;
+    this.disposeChartOnElement(this.kbAnsweredChartRef?.nativeElement);
+    this.disposeChartOnElement(this.kbUnansweredChartRef?.nativeElement);
+    this.disposeChartOnElement(this.kbAnswerRateChartRef?.nativeElement);
+  }
+
+  private disposeChartOnElement(el?: HTMLDivElement | null): void {
+    if (!el) { return; }
+    const existing = echarts.getInstanceByDom(el);
+    existing?.dispose();
+  }
+
+  /** Wait until chart containers are in the DOM with non-zero size (avoids blank charts). */
+  private scheduleKbChartsRender(attempt = 0): void {
+    const maxAttempts = 15;
+    if (this.kbChartsLoading || !this.kbChartPoints.length) { return; }
+
+    const answeredEl = this.kbAnsweredChartRef?.nativeElement;
+    const unansweredEl = this.kbUnansweredChartRef?.nativeElement;
+    const rateEl = this.kbAnswerRateChartRef?.nativeElement;
+    const elements = [answeredEl, unansweredEl, rateEl];
+
+    if (elements.some((el) => !el)) {
+      if (attempt < maxAttempts) {
+        requestAnimationFrame(() => this.scheduleKbChartsRender(attempt + 1));
+      }
+      return;
+    }
+
+    const layoutReady = elements.every(
+      (el) => (el?.clientWidth ?? 0) > 0 && (el?.clientHeight ?? 0) > 0,
+    );
+    if (!layoutReady && attempt < maxAttempts) {
+      requestAnimationFrame(() => this.scheduleKbChartsRender(attempt + 1));
+      return;
+    }
+
+    this.renderKbCharts();
   }
 
   onKbChartTitleClick(chartId: AnalyticsKbChartId): void {
@@ -4757,10 +4800,13 @@ _presentDialogImportContents() {
     if (!this.id_project || !kbId) {
       return;
     }
+    const { startDate, endDate } = this.getChartsLast3WeeksRange();
     this.analyticsEmbedService.queueKbChartClick({
       chartId,
       kbId,
       projectId: this.id_project,
+      from: startDate,
+      to: endDate,
     });
     this.router.navigate(['project', this.id_project, 'analytics', 'new']);
   }
@@ -4775,33 +4821,33 @@ _presentDialogImportContents() {
     const unansweredLabel = this.translate.instant('KbPage.KbStatsUnanswered');
     const rateLabel = this.translate.instant('KbPage.KbStatsAnswerRate');
 
-    if (!this.answeredChart) {
-      this.answeredChart = echarts.init(answeredEl);
-    }
+    this.disposeChartOnElement(answeredEl);
+    this.disposeChartOnElement(unansweredEl);
+    this.disposeChartOnElement(rateEl);
+
+    this.answeredChart = echarts.init(answeredEl);
     this.answeredChart.setOption(
       buildAnsweredBarChartOption(this.kbChartPoints, answeredLabel),
       true,
     );
 
-    if (!this.unansweredChart) {
-      this.unansweredChart = echarts.init(unansweredEl);
-    }
+    this.unansweredChart = echarts.init(unansweredEl);
     this.unansweredChart.setOption(
       buildUnansweredBarChartOption(this.kbChartPoints, unansweredLabel),
       true,
     );
 
-    if (!this.answerRateChart) {
-      this.answerRateChart = echarts.init(rateEl);
-    }
+    this.answerRateChart = echarts.init(rateEl);
     this.answerRateChart.setOption(
       buildAnswerRateChartOption(this.kbChartPoints, rateLabel),
       true,
     );
 
-    this.answeredChart.resize();
-    this.unansweredChart.resize();
-    this.answerRateChart.resize();
+    requestAnimationFrame(() => {
+      this.answeredChart?.resize();
+      this.unansweredChart?.resize();
+      this.answerRateChart?.resize();
+    });
   }
 
 }

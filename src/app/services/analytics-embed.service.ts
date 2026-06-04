@@ -19,6 +19,9 @@ export interface AnalyticsKbChartClickMessage {
   chartId: AnalyticsKbChartId;
   kbId: string;
   projectId: string;
+  /** UTC ISO range, same as analytics charts API (`from` inclusive, `to` exclusive). */
+  from: string;
+  to: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -36,6 +39,8 @@ export class AnalyticsEmbedService {
     chartId: AnalyticsKbChartId;
     kbId: string;
     projectId: string;
+    from: string;
+    to: string;
   }): void {
     this.pendingKbChartClick = {
       type: 'ANALYTICS_KB_CHART_CLICK',
