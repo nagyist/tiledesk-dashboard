@@ -374,6 +374,11 @@ export class IntegrationsComponent implements OnInit, OnDestroy {
         } else {
           if (whatsappApp) {
             whatsappApp.channel = "whatsapp";
+          } else if (environment['whatsappApiUrl']) {
+            whatsappApp = {
+              runURL: `${environment['whatsappApiUrl']}/configure`,
+              channel: "whatsapp"
+            };
           }
         }
         this.availableApps.push(whatsappApp);
