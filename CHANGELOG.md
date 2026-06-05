@@ -1,5 +1,8 @@
 # tiledesk-dashboard
 
+### 2.7.180
+- Fixes the bug: WhatsApp menu item missing from integrations
+
 ### 2.7.179
 - Implements ElevenLabs, Cerebras and OpenRouter in Integrations
 
