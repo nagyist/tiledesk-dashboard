@@ -1,5 +1,8 @@
 # tiledesk-dashboard
 
+### 2.8.0
+- Changes the ElevenLabs integration value from "voice_streaming" to "elevenlabs"
+
 ### 2.7.180
 - Fixes the bug: WhatsApp menu item missing from integrations
 
