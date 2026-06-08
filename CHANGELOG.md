@@ -1,5 +1,8 @@
 # tiledesk-dashboard
 
+### 2.8.1
+- Implements new analytics
+
 ### 2.8.0
 - Changes the ElevenLabs integration value from "voice_streaming" to "elevenlabs"
 
