@@ -66,6 +66,8 @@ import {
   buildAnswerRateChartOption,
   buildDayKeysBetween,
   buildUnansweredBarChartOption,
+  computeKbBarChartsSharedCountMax,
+  computeKbOverTimeTotals,
   KbOverTimePoint,
   parseKbOverTimeResponse,
 } from './kb-analytics-charts.util';
@@ -147,15 +149,14 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
   @ViewChild('kbAnsweredChart') kbAnsweredChartRef?: ElementRef<HTMLDivElement>;
   @ViewChild('kbUnansweredChart') kbUnansweredChartRef?: ElementRef<HTMLDivElement>;
   @ViewChild('kbAnswerRateChart') kbAnswerRateChartRef?: ElementRef<HTMLDivElement>;
-
   private kbChartPoints: KbOverTimePoint[] = [];
   private answeredChart?: echarts.ECharts;
   private unansweredChart?: echarts.ECharts;
   private answerRateChart?: echarts.ECharts;
   private kbChartsRequestId = 0;
+  
   refreshKbsList: boolean = true;
   numberPage: number = 0;
-
 
   kbid_selected: any;
   interval_id;
@@ -258,6 +259,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
   PERMISSION_TO_ADD_CONTENTS: boolean;
   PERMISSION_TO_EXPORT_CONTENTS: boolean;
   PERMISSION_TO_EDIT_FLOWS:boolean
+  PERMISSION_TO_VIEW_ANALYTICS: boolean;
 
   // --- TAB SWITCHER ---
   selectedTab: 'contents' | 'unanswered' = 'contents';
@@ -296,19 +298,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
     this.totalCount = this.namespaces.reduce((acc: number, n: any) => acc + (Number(n.count) || 0), 0);
   }
 
-  /** `count` / `total` dalle API answered/unanswered (liste paginate). */
-  private extractQuestionsApiCount(res: any): number {
-    if (!res || typeof res !== 'object') {
-      return 0;
-    }
-    if (typeof res['total'] === 'number') {
-      return res['total'];
-    }
-    if (typeof res['count'] === 'number') {
-      return res['count'];
-    }
-    return 0;
-  }
+
 
   /** Allinea il campo `answer` per la UI (varianti API / serializzazione). */
   private normalizeAnsweredQuestionItem(item: any): any {
@@ -327,54 +317,24 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
     return answerStr ? { ...item, answer: answerStr } : { ...item };
   }
 
-  /** Percentuale answered / (answered + unanswered). */
-  get kbStatsAnswerRatePercent(): string {
+ 
+  /** Valore numerico del tasso di risposta (0–100). */
+  get kbStatsAnswerRatePercentValue(): number {
     const a = this.kbStatsAnsweredCount;
     const u = this.kbStatsUnansweredCount;
     const d = a + u;
     if (d <= 0) {
-      return '0.0';
+      return 0;
     }
-    return ((100 * a) / d).toFixed(1);
+    return Math.round((1000 * a) / d) / 10;
   }
 
-  /** Aggiorna i KPI domande (chiamate leggere: page 0, limit 1). */
-  loadKbStatsCounts(): void {
-    if (!this.id_project || !this.selectedNamespace?.id) {
-      this.kbStatsAnsweredCount = 0;
-      this.kbStatsUnansweredCount = 0;
-      return;
-    }
-    forkJoin({
-      answered: this.unansweredQuestionsService.getAnsweredQuestions(
-        this.id_project,
-        this.selectedNamespace.id,
-        1,
-        0,
-        'createdAt',
-        -1
-      ),
-      unanswered: this.unansweredQuestionsService.getUnansweredQuestions(
-        this.id_project,
-        this.selectedNamespace.id,
-        1,
-        0,
-        'createdAt',
-        -1
-      ),
-    })
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe({
-        next: (results) => {
-          this.kbStatsAnsweredCount = this.extractQuestionsApiCount(results.answered);
-          this.kbStatsUnansweredCount = this.extractQuestionsApiCount(results.unanswered);
-        },
-        error: (err) => {
-          this.logger.error('[KNOWLEDGE-BASES-COMP] loadKbStatsCounts', err);
-          this.kbStatsAnsweredCount = 0;
-          this.kbStatsUnansweredCount = 0;
-        },
-      });
+  
+  
+  private applyKbChartStatsFromPoints(points: KbOverTimePoint[]): void {
+    const totals = computeKbOverTimeTotals(points);
+    this.kbStatsAnsweredCount = totals.answered;
+    this.kbStatsUnansweredCount = totals.unanswered;
   }
 
   switchTab(tab: 'contents' | 'unanswered') {
@@ -515,6 +475,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
     private roleService: RoleService,
     private rolesService: RolesService,
     private cdr: ChangeDetectorRef,
+
   ) {
     super(prjctPlanService, notify);
     const brand = brandService.getBrand();
@@ -567,8 +528,7 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
     // this.getTranslations();
     this.logger.log('[KNOWLEDGE-BASES-COMP] - HELLO !!!!', this.kbLimit);
     // this.openDialogHookBot(this.depts_Without_BotArray, this.chat_bot)
-    this.listenToProjectUser();
-
+    this.listenToProjectUser()
   }
 
   ngAfterViewInit() {
@@ -583,7 +543,6 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
   }
 
   ngOnDestroy(): void {
-    this.disposeKbCharts();
     clearInterval(this.interval_id);
     if (this.questionsSearchDebounceTimer != null) {
       clearTimeout(this.questionsSearchDebounceTimer);
@@ -712,6 +671,25 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
           // Custom roles: permission depends on matchedPermissions
           this.PERMISSION_TO_ADD_CONTENTS = status.matchedPermissions.includes(PERMISSIONS.KB_CONTENTS_ADD);
           this.logger.log('[KNOWLEDGE-BASES-COMP] - Custom role (3)', status.role, 'PERMISSION_TO_ADD_CONTENTS:', this.PERMISSION_TO_ADD_CONTENTS);
+        }
+
+        // -------------------------------
+        // PERMISSION_TO_VIEW_ANALYTICS
+        // -------------------------------
+        if (status.role === 'owner' || status.role === 'admin') {
+          // Owner and admin always has permission
+          this.PERMISSION_TO_VIEW_ANALYTICS = true;
+          this.logger.log('[SIDEBAR] - Project user is owner or admin (1)', 'PERMISSION_TO_VIEW_ANALYTICS:', this.PERMISSION_TO_VIEW_ANALYTICS);
+
+        } else if (status.role === 'agent') {
+          // Agent never have permission
+          this.PERMISSION_TO_VIEW_ANALYTICS = false;
+          this.logger.log('[SIDEBAR] - Project user agent (2)', 'PERMISSION_TO_VIEW_ANALYTICS:', this.PERMISSION_TO_VIEW_ANALYTICS);
+
+        } else {
+          // Custom roles: permission depends on matchedPermissions
+          this.PERMISSION_TO_VIEW_ANALYTICS = status.matchedPermissions.includes(PERMISSIONS.ANALYTICS_READ);
+          this.logger.log('[SIDEBAR] - Custom role (3) role', status.role, 'PERMISSION_TO_VIEW_ANALYTICS:', this.PERMISSION_TO_VIEW_ANALYTICS);
         }
 
 
@@ -1239,7 +1217,6 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
         this.loadAnsweredQuestions(0, false);
       }
     }
-
     this.getAnwseredUnansweredQuestionsForCharts();
   }
 
@@ -1266,6 +1243,8 @@ export class KnowledgeBasesComponent extends PricingBaseComponent implements OnI
         this.getChatbotUsingNamespace(this.selectedNamespace.id)
 
         this.selectedNamespaceName = namespace['name']
+        // this.router.navigate(['project/' + this.project._id + '/knowledge-bases/' + this.selectedNamespace.id]);
+
         if (this.selectedTab === 'unanswered') {
           this.switchTab('contents');
         }
@@ -2646,7 +2625,6 @@ _presentDialogImportContents() {
      kb.deleting = false;
      Swal.fire({
       title: this.translate.instant('Warning'),
-      // text: this.translate.instant('KbPage.DeletingTheSitemapNotDeleteTheContents'),
       html: this.translate.instant('KbPage.DeletingTheSitemapDeleteTheContentsStrong'),
       icon: "warning",
       showCloseButton: false,
@@ -3334,7 +3312,7 @@ _presentDialogImportContents() {
         this.kbsContentTotalCount = total;
         this.syncNamespaceContentCount(total);
       }
-      this.loadKbStatsCounts();
+      // this.loadKbStatsCounts();
       this.logger.log('[KNOWLEDGE BASES COMP] resp.kbs ', resp.kbs)
       
       // If called after update or add, replace the entire list to maintain server order
@@ -3805,7 +3783,6 @@ _presentDialogImportContents() {
         this.kbsListCount = this.kbsListCount - 1;
         this.kbsContentTotalCount = Math.max(0, (Number(this.kbsContentTotalCount) || 0) - 1);
         this.syncNamespaceContentCount(this.kbsContentTotalCount);
-        // this.refreshKbsList = !this.refreshKbsList;
         this.hasRemovedKb = true;
         if (kb.type === 'sitemap' && this.kbTableComponent) {
           this.kbTableComponent.resetFiltersAfterSitemapDelete();
@@ -4546,9 +4523,6 @@ _presentDialogImportContents() {
           this.isLoadingMoreAnswered = false;
           this.answeredQuestionsPage = page;
 
-          if (page === 0 && !append && !String(this.answeredQuestionsSearch || '').trim()) {
-            this.kbStatsAnsweredCount = this.extractQuestionsApiCount(res);
-          }
 
           this.logger.log('[KnowledgeBasesComponent] Loaded answered questions:', {
             page,
@@ -4636,9 +4610,6 @@ _presentDialogImportContents() {
           this.isLoadingMoreUnanswered = false;
           this.unansweredQuestionsPage = page;
 
-          if (page === 0 && !append && !String(this.unansweredQuestionsSearch || '').trim()) {
-            this.kbStatsUnansweredCount = this.extractQuestionsApiCount(res);
-          }
           
           this.logger.log('[KnowledgeBasesComponent] Loaded unanswered questions:', {
             page,
@@ -4682,7 +4653,7 @@ _presentDialogImportContents() {
   }
 
 
-  /** Move a UTC date by whole calendar days (handles 28/29/30/31-day months). */
+    /** Move a UTC date by whole calendar days (handles 28/29/30/31-day months). */
   private shiftUtcCalendarDays(date: Date, days: number): Date {
     return new Date(Date.UTC(
       date.getUTCFullYear(),
@@ -4713,6 +4684,9 @@ _presentDialogImportContents() {
   getAnwseredUnansweredQuestionsForCharts() {
     const namespaceId = this.selectedNamespace?.id;
     if (!namespaceId) {
+      this.kbStatsAnsweredCount = 0;
+      this.kbStatsUnansweredCount = 0;
+      this.kbChartPoints = [];
       this.logger.warn('[KnowledgeBasesComponent] getAnwseredUnansweredQuestionsForCharts skipped: no selectedNamespace');
       return;
     }
@@ -4728,6 +4702,7 @@ _presentDialogImportContents() {
           if (requestId !== this.kbChartsRequestId) { return; }
           const dayKeys = buildDayKeysBetween(new Date(startDate), new Date(endDate));
           this.kbChartPoints = alignPointsToDayKeys(dayKeys, parseKbOverTimeResponse(res));
+          this.applyKbChartStatsFromPoints(this.kbChartPoints);
           this.kbChartsLoading = false;
           this.cdr.detectChanges();
           this.scheduleKbChartsRender();
@@ -4735,8 +4710,12 @@ _presentDialogImportContents() {
         },
         error: (err) => {
           if (requestId !== this.kbChartsRequestId) { return; }
+          this.kbChartPoints = [];
+          this.kbStatsAnsweredCount = 0;
+          this.kbStatsUnansweredCount = 0;
           this.kbChartsLoading = false;
           this.disposeKbCharts();
+          this.cdr.markForCheck();
           this.logger.error('[KnowledgeBasesComponent] Error loading questions stats for charts', err);
         },
       });
@@ -4796,6 +4775,11 @@ _presentDialogImportContents() {
   }
 
   onKbChartTitleClick(chartId: AnalyticsKbChartId): void {
+    if (!this.PERMISSION_TO_VIEW_ANALYTICS) {
+      this.notify.presentDialogNoPermissionToViewThisSection();
+      return;
+    }
+
     const kbId = this.selectedNamespace?.id;
     if (!this.id_project || !kbId) {
       return;
@@ -4820,27 +4804,28 @@ _presentDialogImportContents() {
     const answeredLabel = this.translate.instant('KbPage.KbStatsAnswered');
     const unansweredLabel = this.translate.instant('KbPage.KbStatsUnanswered');
     const rateLabel = this.translate.instant('KbPage.KbStatsAnswerRate');
+    const sharedCountMax = computeKbBarChartsSharedCountMax(this.kbChartPoints);
 
     this.disposeChartOnElement(answeredEl);
     this.disposeChartOnElement(unansweredEl);
     this.disposeChartOnElement(rateEl);
 
     this.answeredChart = echarts.init(answeredEl);
-    this.answeredChart.setOption(
-      buildAnsweredBarChartOption(this.kbChartPoints, answeredLabel),
-      true,
+     this.answeredChart.setOption(
+      buildAnsweredBarChartOption(this.kbChartPoints, answeredLabel, sharedCountMax),
+      { notMerge: true },
     );
 
     this.unansweredChart = echarts.init(unansweredEl);
     this.unansweredChart.setOption(
-      buildUnansweredBarChartOption(this.kbChartPoints, unansweredLabel),
-      true,
+      buildUnansweredBarChartOption(this.kbChartPoints, unansweredLabel, sharedCountMax),
+      { notMerge: true },
     );
 
     this.answerRateChart = echarts.init(rateEl);
     this.answerRateChart.setOption(
       buildAnswerRateChartOption(this.kbChartPoints, rateLabel),
-      true,
+      { notMerge: true },
     );
 
     requestAnimationFrame(() => {
