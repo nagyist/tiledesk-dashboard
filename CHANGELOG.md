@@ -1,5 +1,8 @@
 # tiledesk-dashboard
 
+### 2.8.4
+- Latest stable
+
 ### 2.8.3
 - Fixes the bug: Knowledge base statistics links to new analytics don't work
 
