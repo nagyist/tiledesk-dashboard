@@ -1,5 +1,8 @@
 # tiledesk-dashboard
 
+### 2.8.3
+- Fixes the bug: Knowledge base statistics links to new analytics don't work
+
  ### 2.8.2
 - Adds bar charts for answered and unanswered questions and line charts for answer rate to knowledge base KPIs.
 - Update the format of knowledge base statistics counts
