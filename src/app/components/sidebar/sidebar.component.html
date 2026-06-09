@@ -312,7 +312,7 @@
           matTooltipHideDelay="100"
           style="position: relative;">
           <a class="customAncor" 
-          [routerLink]="PERMISSION_TO_VIEW_ANALYTICS ? ['/project', project._id, 'analytics'] : null"
+          [routerLink]="getAnalyticsRouterLink()"
           (click)="handleAnalyticsClick($event)">
           
             <span>
@@ -324,9 +324,9 @@
             </span>
           </a>
 
-          <div *ngIf="ANALYTICS_NEW_ROUTE_IS_ACTIVE" class="sidebar-analytics-new-badge">
+          <!-- <div *ngIf="ANALYTICS_NEW_ROUTE_IS_ACTIVE" class="sidebar-analytics-new-badge">
             <span class="material-icons-outlined">fiber_new</span>
-          </div>
+          </div> -->
         </div>
       </ng-container>
     </ng-container> 

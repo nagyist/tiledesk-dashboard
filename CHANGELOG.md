@@ -1,5 +1,17 @@
 # tiledesk-dashboard
 
+### 2.8.1
+- Implements new analytics
+
+### 2.8.0
+- Changes the ElevenLabs integration value from "voice_streaming" to "elevenlabs"
+
+### 2.7.180
+- Fixes the bug: WhatsApp menu item missing from integrations
+
+### 2.7.179
+- Implements ElevenLabs, Cerebras and OpenRouter in Integrations
+
 ### 2.7.178
 - Implements the new analytics (for test purpose)
 
