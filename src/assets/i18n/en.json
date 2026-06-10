@@ -2744,6 +2744,7 @@
         "EditOpenAICompatibleEndpoint": "Edit OpenAI-Compatible Endpoint",
         "TotalVllmEndpoints": "Total Endpoints",
         "SearchByNameURLOrModels": "Search by name or URL",
+        "NoVllmEndpoints": "No endpoints",
         "NoVllmEndpointsFound": "No endpoints found",
         "VllmEndpointNamePlaceholder": "Enter endpoint name",
         "VllmEndpointUrlPlaceholder": "URL of the OpenAI-compatible endpoint",

@@ -75,8 +75,8 @@
                     <tr *ngIf="filteredEndpoints.length === 0">
                         <td colspan="5" class="no-data">
                             <div class="no-data-message">
-                                <span class="material-icons-outlined">inbox</span>
-                                <p>{{ 'Integration.NoVllmEndpointsFound' | translate }}</p>
+                                <span class="material-icons-outlined">link_off</span>
+                                <p>{{ emptyStateMessageKey | translate }}</p>
                             </div>
                         </td>
                     </tr>

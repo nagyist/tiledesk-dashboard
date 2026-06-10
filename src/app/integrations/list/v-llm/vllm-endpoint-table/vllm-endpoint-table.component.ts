@@ -107,4 +107,14 @@ export class VllmEndpointTableComponent implements OnInit, OnChanges {
   getModelsCount(endpoint: VllmEndpoint): number {
     return Array.isArray(endpoint.models) ? endpoint.models.length : 0;
   }
+
+  hasActiveSearch(): boolean {
+    return !!this.filterText?.trim();
+  }
+
+  get emptyStateMessageKey(): string {
+    return this.hasActiveSearch()
+      ? 'Integration.NoVllmEndpointsFound'
+      : 'Integration.NoVllmEndpoints';
+  }
 }
