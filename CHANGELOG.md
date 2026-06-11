@@ -1,5 +1,8 @@
 # tiledesk-dashboard
 
+### 2.8.5
+- Minor improvements
+
 ### 2.8.4
 - Latest stable
 
