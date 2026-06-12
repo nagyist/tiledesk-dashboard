@@ -1,5 +1,9 @@
 # tiledesk-dashboard
 
+### 2.8.8
+- Fixes the bug: Uploaded files can be modified
+- Improves the TXT contents type filter in the knowledge base table to also include regex_custom  file type upload 
+
 ### 2.8.7
 - Implements a new chunking option using regular expressions in the File upload modal, allowing users to define chunks for TXT and Markdown files
 - Refactors the vLLM integration to manage OpenAI-compatible endpoints and models
