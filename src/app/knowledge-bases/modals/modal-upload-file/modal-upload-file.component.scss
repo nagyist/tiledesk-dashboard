@@ -300,15 +300,16 @@ justify-content: center;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 8px;
+    gap: 6px;
     margin: 8px 0 12px;
     max-width: 640px;
 }
 
-.regex-chunking-row {
-    display: flex;
-    align-items: center;
-    width: fit-content;
+.regex-chunking-section__desc {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.4;
+    color: rgba(0, 0, 0, 0.65);
 }
 
 .regex-chunking-input-wpr {

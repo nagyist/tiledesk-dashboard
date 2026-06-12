@@ -402,7 +402,7 @@ export class ModalPreviewSettingsComponent implements OnInit, OnChanges, OnDestr
 
           this.logger.log('[MODAL PREVIEW SETTINGS] - MODELS AGGIORNATI vllmProvider:', vllmProvider.models);
         } else {
-          this.logger.warn('[MODAL PREVIEW SETTINGS] - Nessun modello trovato per Ollama');
+          this.logger.warn('[MODAL PREVIEW SETTINGS] - Nessun modello trovato per Vllm');
         }
 
         // 🔁 Ricarica i gruppi dopo aver aggiornato il provider

@@ -92,9 +92,9 @@
             </div>
             
             <!-- ------------------------------------ -->
-            <!-- Use case text / regex_custom -->
+            <!-- Use case text -->
             <!-- ------------------------------------ -->
-            <div *ngIf="kb.type === 'text' || kb.type === 'regex_custom'">
+            <div *ngIf="kb.type === 'text'">
                 <span class="input-label">{{ 'KbPage.FileText' | translate }}</span>
                 <textarea [(ngModel)]="content" type="text" name="content" class="custom-textarea" rows="4"></textarea>
             </div>

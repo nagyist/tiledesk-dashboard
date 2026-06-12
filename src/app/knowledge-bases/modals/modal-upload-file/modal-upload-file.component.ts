@@ -45,8 +45,6 @@ export class ModalUploadFileComponent implements OnInit {
   selectedTabIndex = 0;
   regexChunkingEnabled = false;
   chunkRegexInput = '';
-  isRegexChunkingHelpOpen = false;
-  private regexChunkingHelpCloseTimeout: any;
 
   // KB Tags
   kbTag: string = '';
@@ -70,22 +68,6 @@ export class ModalUploadFileComponent implements OnInit {
     }
   ];
 
-  regexChunkingHelpPositions: ConnectedPosition[] = [
-    {
-      originX: 'start',
-      originY: 'center',
-      overlayX: 'end',
-      overlayY: 'center',
-      offsetX: -8,
-    },
-    {
-      originX: 'start',
-      originY: 'bottom',
-      overlayX: 'start',
-      overlayY: 'top',
-      offsetY: 8,
-    },
-  ];
  
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -128,21 +110,6 @@ export class ModalUploadFileComponent implements OnInit {
 
   cancelClose() {
     clearTimeout(this.closeTimeout);
-  }
-
-  openRegexChunkingHelp(): void {
-    clearTimeout(this.regexChunkingHelpCloseTimeout);
-    this.isRegexChunkingHelpOpen = true;
-  }
-
-  scheduleCloseRegexChunkingHelp(): void {
-    this.regexChunkingHelpCloseTimeout = setTimeout(() => {
-      this.isRegexChunkingHelpOpen = false;
-    }, 150);
-  }
-
-  cancelCloseRegexChunkingHelp(): void {
-    clearTimeout(this.regexChunkingHelpCloseTimeout);
   }
 
   get regexChunkingDisabled(): boolean {
@@ -400,7 +367,7 @@ export class ModalUploadFileComponent implements OnInit {
         this.uploadCompleted = true;
         this.uploadFailed = false;
         this.body = {
-          type: this.file_extension,
+          type: this.mapFileExtToKbType(this.file_extension),
           source: downloadURL,
           content: '',
           name: this.uploadedFileName,
@@ -525,9 +492,16 @@ export class ModalUploadFileComponent implements OnInit {
       submitBody.chunk_regex = this.getChunkRegexValue();
     } else {
       delete submitBody.chunk_regex;
+      submitBody.type = this.mapFileExtToKbType(submitBody.type);
     }
 
     return submitBody;
+  }
+
+  /** Table/backend use `txt` for plain-text imports; `.md` files are stored as `txt`. */
+  private mapFileExtToKbType(ext: string): string {
+    const normalized = (ext || '').toLowerCase();
+    return normalized === 'md' ? 'txt' : normalized;
   }
 
   private isRegexChunkingCheckboxChecked(): boolean {
@@ -557,7 +531,7 @@ export class ModalUploadFileComponent implements OnInit {
       return false;
     }
     this.body = {
-      type: spec.ext,
+      type: this.mapFileExtToKbType(spec.ext),
       source: spec.url.href,
       content: '',
       name: spec.name,

@@ -105,20 +105,14 @@
     </div>
 
     <div class="regex-chunking-section">
-        <div class="regex-chunking-row"
-            #regexChunkingHelpTrigger="cdkOverlayOrigin"
-            cdkOverlayOrigin
-            (mouseenter)="openRegexChunkingHelp()"
-            (mouseleave)="scheduleCloseRegexChunkingHelp()">
-            <mat-checkbox
-                #regexChunkingCheckbox
-                [(ngModel)]="regexChunkingEnabled"
-                [disabled]="regexChunkingDisabled"
-                (ngModelChange)="onRegexChunkingEnabledChange($event)"
-                color="primary">
-                {{ 'KbPage.RegexChunking' | translate }}
-            </mat-checkbox>
-        </div>
+        <mat-checkbox
+            #regexChunkingCheckbox
+            [(ngModel)]="regexChunkingEnabled"
+            [disabled]="regexChunkingDisabled"
+            (ngModelChange)="onRegexChunkingEnabledChange($event)"
+            color="primary">
+            {{ 'KbPage.RegexChunking' | translate }}
+        </mat-checkbox>
         <div class="regex-chunking-input-wpr"
             [class.regex-chunking-input-wpr--disabled]="!regexChunkingEnabled">
             <span class="regex-chunking-input-affix" aria-hidden="true">/</span>
@@ -135,24 +129,10 @@
                 spellcheck="false">
             <span class="regex-chunking-input-affix" aria-hidden="true">/</span>
         </div>
+        <p class="regex-chunking-section__desc">
+            {{ 'KbPage.RegexChunkingDescription' | translate }}
+        </p>
     </div>
-
-    <ng-template
-        cdk-connected-overlay
-        [cdkConnectedOverlayOrigin]="regexChunkingHelpTrigger"
-        [cdkConnectedOverlayOpen]="isRegexChunkingHelpOpen"
-        [cdkConnectedOverlayPositions]="regexChunkingHelpPositions"
-        [cdkConnectedOverlayHasBackdrop]="false"
-        (detach)="isRegexChunkingHelpOpen = false">
-        <div class="cdk-popover"
-            (mouseenter)="cancelCloseRegexChunkingHelp()"
-            (mouseleave)="scheduleCloseRegexChunkingHelp()">
-            <div class="cdk-popover-arrow"></div>
-            <div class="cdk-popover-content">
-                {{ 'KbPage.RegexChunkingDescription' | translate }}
-            </div>
-        </div>
-    </ng-template>
 
     <!-- KB Tags -->
     <div class="kb-tags-input-wpr" style="display: flex;vertical-align: middle;">
