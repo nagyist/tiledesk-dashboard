@@ -1,5 +1,9 @@
 # tiledesk-dashboard
 
+### 2.8.7
+- Implements a new chunking option using regular expressions in the File upload modal, allowing users to define chunks for TXT and Markdown files
+- Refactors the vLLM integration to manage OpenAI-compatible endpoints and models
+
 ### 2.8.6
 - Fixes the bug: the behavior of the switch buttons in the widget set up > advanced section is not aligned with the other ones on the page
 - Removes the query param ?tiledeskLogout
